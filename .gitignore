@@ -1,8 +1,7 @@
 /vendor
 build
 composer.phar
-composer.lock
-.DS_Store
+# composer.lock
 .phpunit.result.cache
 /.history
 phpcs.xml

@@ -4,7 +4,6 @@ namespace NotificationChannels\Arkesel;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Notifications\ChannelManager;
 use GuzzleHttp\Client;
 
 class ArkeselServiceProvider extends ServiceProvider
@@ -16,7 +15,7 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
 
-        Notification::resolved(function (ChannelManger $service) {
+        Notification::resolved(function (\Illuminate\Notifications\ChannelManager $service) {
             $service->extend('arkesel', function ($app) {
                 return new ArkeselChannel(
                     $app->make(Client::class),
