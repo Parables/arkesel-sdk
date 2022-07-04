@@ -1,18 +1,19 @@
 {
-    "name": "laravel-notification-channels/:package_name",
-    "description": ":package_description",
-    "homepage": "https://github.com/laravel-notification-channels/:package_name",
+    "name": "laravel-notification-channels/arkesel",
+    "description": "Arkesel Notification Channel For Laravel",
+    "homepage": "https://github.com/laravel-notification-channels/arkesel",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_website",
+            "name": "Parables Boltnoel",
+            "email": "parables95@gmail.com",
+            "homepage": "https://github.com/parables",
             "role": "Developer"
         }
     ],
     "require": {
         "php": ">=7.2",
+        "guzzlehttp/guzzle": "^7.4",
         "illuminate/notifications": "~6.0 || ~7.0 || ~8.0",
         "illuminate/support": "~6.0 || ~7.0 || ~8.0"
     },
@@ -22,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NotificationChannels\\:channel_namespace\\": "src"
+            "NotificationChannels\\Arkesel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NotificationChannels\\:channel_namespace\\Test\\": "tests"
+            "NotificationChannels\\Arkesel\\Test\\": "tests"
         }
     },
     "scripts": {
