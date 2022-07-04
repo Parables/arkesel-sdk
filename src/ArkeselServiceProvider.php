@@ -3,6 +3,9 @@
 namespace NotificationChannels\Arkesel;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Notifications\ChannelManager;
+use GuzzleHttp\Client;
 
 class ArkeselServiceProvider extends ServiceProvider
 {
@@ -11,23 +14,16 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Bootstrap code here.
+        $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
 
-        /**
-         * Here's some example code we use for the pusher package.
-
-        $this->app->when(Channel::class)
-            ->needs(Pusher::class)
-            ->give(function () {
-                $pusherConfig = config('broadcasting.connections.pusher');
-
-                return new Pusher(
-                    $pusherConfig['key'],
-                    $pusherConfig['secret'],
-                    $pusherConfig['app_id']
+        Notification::resolved(function (ChannelManger $service) {
+            $service->extend('arkesel', function ($app) {
+                return new ArkeselChannel(
+                    $app->make(Client::class),
+                    $app['config']['arkesel']
                 );
             });
-         */
+        });
     }
 
     /**
@@ -35,5 +31,10 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
+            ], 'arkesel');
+        }
     }
 }
