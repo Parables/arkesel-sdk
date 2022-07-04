@@ -3,6 +3,7 @@
 namespace Parables\ArkeselSmsNotification;
 
 use Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use Illuminate\Notifications\Notification;
 use GuzzleHttp\Client;
@@ -27,6 +28,8 @@ class ArkeselChannel
         $this->smsSender = Arr::get($config, 'sms_sender', 'Arkesel');
         $this->smsCallbackUrl = Arr::get($config, 'sms_callback_url');
         $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
+
+        Log::info('Logging config: ', $config);
     }
 
     /**
@@ -48,6 +51,8 @@ class ArkeselChannel
         if ($msg instanceof ArkeselMessage) {
             $message = $msg;
         }
+
+        Log::info('Logging message: ', ['message' => $message]);
 
         if (!empty($message->recipients)) {
             $recipients = is_string($message->recipients) ? explode(",", $message->recipients) : $message->recipients;
@@ -76,6 +81,8 @@ class ArkeselChannel
                 'scheduled_date' => $message->schedule ?? null,  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
                 'sandbox' => $message->sandbox ?? $this->smsSandbox,
             ]);
+
+        Log::info('Logging payload: ', $payload);
 
         try {
             $response = $this->client->request(
