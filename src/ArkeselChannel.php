@@ -3,13 +3,30 @@
 namespace NotificationChannels\Arkesel;
 
 use NotificationChannels\Arkesel\Exceptions\CouldNotSendNotification;
+use Illuminate\Support\Arr;
 use Illuminate\Notifications\Notification;
+use GuzzleHttp\Client;
+use Exception;
 
 class ArkeselChannel
 {
-    public function __construct($client)
+    protected Client $client;
+    protected string $apiKey;
+    protected string $apiVersion;
+    protected string $smsUrl;
+    protected string $smsSender;
+    protected string $smsCallbackUrl;
+    protected string $smsSandbox;
+
+    public function __construct(array $config = [])
     {
-        // Initialisation code here
+        $this->client = new Client(['base_uri' => 'https://sms.arkesel.com']);
+        $this->apiKey = Arr::get($config, 'api_key');
+        $this->apiVersion = Arr::get($config, 'api_version', 'v2');
+        $this->smsUrl = Arr::get($config, 'sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
+        $this->smsSender = Arr::get($config, 'sms_sender', 'Arkesel');
+        $this->smsCallbackUrl = Arr::get($config, 'sms_callback_url');
+        $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
     }
 
     /**
@@ -22,45 +39,58 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        //$response = [a call to the api of your notification send]
+        $msg = $notification->toArkesel($notifiable);
 
-        //        if ($response->error) { // replace this by the code need to check for errors
-        //            throw CouldNotSendNotification::serviceRespondedWithAnError($response);
-        //        }
+        if (is_string($msg)) {
+            $message = new ArkeselMessage(message: $msg);
+        }
 
+        if ($msg instanceof ArkeselMessage) {
+            $message = $msg;
+        }
 
+        if (!empty($message->recipients)) {
+            $recipients = is_string($message->recipients) ? explode(",", $message->recipients) : $message->recipients;
+        } else {
+            $recipients = Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification));
+        }
 
+        if (empty($recipients)) {
+            throw new Exception("No recipients were specified for this notification");
+        }
+
+        $payload = $this->apiVersion === 'v1'
+            ? array_filter([
+                "action" => "send-sms",
+                "api_key" => $message->apiKey ?? $this->apiKey,
+                "to" => implode(",", $recipients),
+                "from" => $message->sender ?? $this->smsSender,
+                "sms" => $message->message,
+                "schedule" => $message->schedule ?? null,  // dd-mm-yyyy hh:mm AM/PM
+            ])
+            :  array_filter([
+                'sender' => $message->sender ?? $this->smsSender,
+                'recipients' => $recipients,
+                'message' => $message->message,
+                'callback_url' => $message->callbackUrl ?? $this->smsCallbackUrl,
+                'scheduled_date' => $message->schedule ?? null,  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
+                'sandbox' => $message->sandbox ?? $this->smsSandbox,
+            ]);
 
         try {
-            $response =  Http::withHeaders([
-                "api-key" =>  config('services.arkesel.key'),
-                "Content-Type" => "application/json",
-            ])->post(
-                url: url(config('services.arkesel.sms_url')),
-                data: array_filter([
-                    'message' => $message,
-                    'recipients' => $recipients,
-                    'sender' => $sender,
-                    'sandbox' => config('services.arkesel.sms_sandbox'),
-                    'scheduled_date' => $scheduled_date,
-                ])
+            $response = $this->client->request(
+                method: $this->apiVersion === 'v1' ? 'GET' : 'POST',
+                uri: $this->smsUrl,
+                options: array_filter([
+                    'headers' => array_filter([
+                        'api-key' => $this->apiVersion === 'v2' ? $this->apiKey : null,
+                    ]),
+                    'query' => $this->apiVersion === 'v1' ? $payload : null,
+                    'json' => $payload,
+                ]),
             );
-
-            if ($response->ok()) {
-                // event(); sms sent
-                return response('Successful, SMS delivered', 200);
-            }
         } catch (\Throwable $th) {
-            Log::error("Something went wrong", ['error' => $th->getMessage()]);
-            return response(
-                [
-                    'message' => 'Failed to send SMS',
-                    'error' => $th->getMessage(),
-                    // 'content' => $response->body(),
-                    // 'status_code' => $response->status(),
-                ],
-                400,
-            );
+            throw CouldNotSendNotification::serviceRespondedWithAnError($response);
         }
     }
 }
