@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationChannels\Arkesel;
+namespace Parables\ArkeselSmsNotification;
 
 use Illuminate\Support\Arr;
 

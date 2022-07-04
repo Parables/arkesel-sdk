@@ -1,7 +1,7 @@
 {
-    "name": "laravel-notification-channels/arkesel",
+    "name": "parables/laravel-arkesel-sms-notification",
     "description": "Arkesel Notification Channel For Laravel",
-    "homepage": "https://github.com/laravel-notification-channels/arkesel",
+    "homepage": "https://github.com/parables/laravel-arkesel-sms-notification",
     "license": "MIT",
     "authors": [
         {

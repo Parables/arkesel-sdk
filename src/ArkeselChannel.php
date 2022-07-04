@@ -1,8 +1,8 @@
 <?php
 
-namespace NotificationChannels\Arkesel;
+namespace Parables\ArkeselSmsNotification;
 
-use NotificationChannels\Arkesel\Exceptions\CouldNotSendNotification;
+use Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification;
 use Illuminate\Support\Arr;
 use Illuminate\Notifications\Notification;
 use GuzzleHttp\Client;
@@ -35,7 +35,7 @@ class ArkeselChannel
      * @param mixed $notifiable
      * @param \Illuminate\Notifications\Notification $notification
      *
-     * @throws \NotificationChannels\Arkesel\Exceptions\CouldNotSendNotification
+     * @throws \Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification
      */
     public function send($notifiable, Notification $notification)
     {
