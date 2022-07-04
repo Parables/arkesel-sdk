@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NotificationChannels\\Arkesel\\": "src"
+            "Parables\\ArkeselSmsNotification\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NotificationChannels\\Arkesel\\Test\\": "tests"
+            "Parables\\ArkeselSmsNotification\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -34,5 +34,12 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Parables\\ArkeselSmsNotification\\ArkeselServiceProvider"
+            ]
+        }
     }
 }
