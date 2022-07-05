@@ -16,8 +16,8 @@ class ArkeselChannel
     protected string $apiVersion;
     protected string $smsUrl;
     protected string $smsSender;
-    protected string $smsCallbackUrl;
-    protected string $smsSandbox;
+    protected ?string $smsCallbackUrl;
+    protected bool $smsSandbox;
 
     public function __construct(array $config = [])
     {
@@ -25,7 +25,7 @@ class ArkeselChannel
         $this->apiKey = Arr::get($config, 'api_key');
         $this->apiVersion = Arr::get($config, 'api_version', 'v2');
         $this->smsUrl = Arr::get($config, 'sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
-        $this->smsSender = Arr::get($config, 'sms_sender', 'Arkesel');
+        $this->smsSender = Arr::get($config, 'sms_sender');
         $this->smsCallbackUrl = Arr::get($config, 'sms_callback_url');
         $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
 

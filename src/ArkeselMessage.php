@@ -20,7 +20,7 @@ class ArkeselMessage
      *
      * @var string
      */
-    public string $apiKey;
+    public ?string $apiKey;
 
     /**
      * schedule when the message should be sent
@@ -29,14 +29,14 @@ class ArkeselMessage
      * @see https://developers.arkesel.com/#operation/send_schedule_sms_v1
      * @see https://developers.arkesel.com/#operation/send_sms
      */
-    public string $schedule;
+    public ?string $schedule;
 
     /**
      * the name or number that identifies the sender of an SMS message
      *
      * @var string
      */
-    public string $sender;
+    public ?string $sender;
 
     /**
      * phone numbers to which to Send message to
@@ -47,7 +47,7 @@ class ArkeselMessage
      *
      * SMS API V2: ["233544919953", "233544919953", "233544919953"]
      */
-    public string|array $recipients;
+    public string|array|null $recipients;
 
     /**
      * A URL that will be called to notify you about the status of the message to a particular number.
@@ -55,7 +55,7 @@ class ArkeselMessage
      * @var string
      * @see developershttps://developers.arkesel.com/#operation/send_sms
      */
-    public string $callbackUrl;
+    public ?string $callbackUrl;
 
     /**
      * if true, sms messages are not forwarded to the mobile network providers for delivery,

@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'sms_sender' => env('ARKESEL_SMS_SENDER'),
+    'sms_sender' => env('ARKESEL_SMS_SENDER', config('app.name')),
 
 
     /*
