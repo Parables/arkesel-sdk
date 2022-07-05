@@ -17,10 +17,7 @@ class ArkeselServiceProvider extends ServiceProvider
 
         Notification::resolved(function (\Illuminate\Notifications\ChannelManager $service) {
             $service->extend('arkesel', function ($app) {
-                return new ArkeselChannel(
-                    $app->make(Client::class),
-                    $app['config']['arkesel']
-                );
+                return new ArkeselChannel($app['config']['arkesel']);
             });
         });
     }
