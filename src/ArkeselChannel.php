@@ -28,8 +28,6 @@ class ArkeselChannel
         $this->smsSender = Arr::get($config, 'sms_sender');
         $this->smsCallbackUrl = Arr::get($config, 'sms_callback_url');
         $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
-
-        Log::info('Logging config: ', $config);
     }
 
     /**
@@ -51,8 +49,6 @@ class ArkeselChannel
         if ($msg instanceof ArkeselMessage) {
             $message = $msg;
         }
-
-        Log::info('Logging message: ', ['message' => $message]);
 
         if (!empty($message->recipients)) {
             $recipients = is_string($message->recipients) ? explode(",", $message->recipients) : $message->recipients;
@@ -82,7 +78,6 @@ class ArkeselChannel
                 'sandbox' => $message->sandbox ?? $this->smsSandbox,
             ]);
 
-        Log::info('Logging payload: ', $payload);
 
         try {
             $response = $this->client->request(
