@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 namespace Parables\ArkeselSdk\NotificationChannel;
 
 use Exception;
@@ -39,7 +45,7 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!method_exists($notification, 'toArkesel')) {
+        if (! method_exists($notification, 'toArkesel')) {
             throw new Exception('"toArkesel($notifiable)" method does not exist');
         }
 
@@ -53,7 +59,7 @@ class ArkeselChannel
             $message = $msg;
         }
 
-        if (!empty($message->recipients)) {
+        if (! empty($message->recipients)) {
             $recipients = is_string($message->recipients) ? explode(',', $message->recipients) : $message->recipients;
         } else {
             $recipients = Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification));
