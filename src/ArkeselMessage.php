@@ -2,12 +2,10 @@
 
 namespace Parables\ArkeselSmsNotification;
 
-use Illuminate\Support\Arr;
-
 class ArkeselMessage
 {
     /**
-     * the SMS message to be sent
+     * the SMS message to be sent.
      *
      * @var string
      *
@@ -16,30 +14,31 @@ class ArkeselMessage
     public string $message;
 
     /**
-     * Arkesel SMS API Key
+     * Arkesel SMS API Key.
      *
      * @var string
      */
     public ?string $apiKey;
 
     /**
-     * schedule when the message should be sent
+     * schedule when the message should be sent.
      *
      * @var string
+     *
      * @see https://developers.arkesel.com/#operation/send_schedule_sms_v1
      * @see https://developers.arkesel.com/#operation/send_sms
      */
     public ?string $schedule;
 
     /**
-     * the name or number that identifies the sender of an SMS message
+     * the name or number that identifies the sender of an SMS message.
      *
      * @var string
      */
     public ?string $sender;
 
     /**
-     * phone numbers to which to Send message to
+     * phone numbers to which to Send message to.
      *
      * @var string|array
      *
@@ -53,23 +52,23 @@ class ArkeselMessage
      * A URL that will be called to notify you about the status of the message to a particular number.
      *
      * @var string
+     *
      * @see developershttps://developers.arkesel.com/#operation/send_sms
      */
     public ?string $callbackUrl;
 
     /**
      * if true, sms messages are not forwarded to the mobile network providers for delivery,
-     *  hence you are not billed for the operation. Use this to test your application
+     *  hence you are not billed for the operation. Use this to test your application.
      *
-     * @var boolean
+     * @var bool
      */
     public bool $sandbox;
 
     /**
-     * new ArkeselMessage instance
+     * new ArkeselMessage instance.
      *
-     * @param string $message
-     *
+     * @param  string  $message
      */
     public function __construct(
         string $message = '',
@@ -83,68 +82,72 @@ class ArkeselMessage
         $this->message = $message;
         $this->apiKey = $apiKey;
         $this->schedule = $schedule;
-        $this->sender =  $sender;
+        $this->sender = $sender;
         $this->recipients = $recipients;
         $this->callbackUrl = $callbackUrl;
         $this->sandbox = $sandbox;
     }
 
     /**
-     * set the message to be sent
+     * set the message to be sent.
      *
-     * @param string $message
+     * @param  string  $message
      * @return $this
      */
     public function message(string $message)
     {
         $this->message = $message;
+
         return $this;
     }
 
     /**
      * sets the API key to used to authenticate the request
-     * Overrides the API key set in the `.env` file
+     * Overrides the API key set in the `.env` file.
      *
-     * @param string $apiKey
+     * @param  string  $apiKey
      * @return $this
      */
     public function apiKey(string $apiKey)
     {
         $this->apiKey = $apiKey;
+
         return $this;
     }
 
-
     /**
-     *  set/schedule when the message should be sent
+     *  set/schedule when the message should be sent.
      *
      * @var string
+     *
      * @see https://developers.arkesel.com/#operation/send_schedule_sms_v1
      * @see https://developers.arkesel.com/#operation/send_sms
      *
-     * @param string $schedule
+     * @param  string  $schedule
      * @return $this
      */
     public function schedule(string $schedule)
     {
         $this->schedule = $schedule;
+
         return $this;
     }
 
     /**
-     * set the name or number that identifies the sender of an SMS message
+     * set the name or number that identifies the sender of an SMS message.
      *
-     * @param string $sender
-     * @return this
+     * @param  string  $sender
+     * @return $this
      */
     public function sender(string $sender)
     {
         $this->sender = $sender;
+
         return $this;
     }
 
     /**
-     * set the phone numbers to receive the sms
+     * set the phone numbers to receive the sms.
      *
      * @var string|array
      *
@@ -152,38 +155,43 @@ class ArkeselMessage
      *
      * SMS API V2: ["233544919953", "233544919953", "233544919953"]
      *
-     * @param string|array $recipients
-     * @return this
+     * @param  string|array  $recipients
+     * @return $this
      */
     public function recipients(string|array $recipients)
     {
         $this->recipients = $recipients;
+
         return $this;
     }
 
     /**
      * set a URL that will be called to notify you about the status of the message to a particular number.
      *
-     * @param string $callbackUrl
+     * @param  string  $callbackUrl
+     *
      * @see developershttps://developers.arkesel.com/#operation/send_sms
-     * @return this
+     *
+     * @return $this
      */
     public function callbackUrl(string $callbackUrl)
     {
         $this->callbackUrl = $callbackUrl;
+
         return $this;
     }
 
     /**
      * if true, sms messages are not forwarded to the mobile network providers for delivery,
-     *  hence you are not billed for the operation. Use this to test your application
+     *  hence you are not billed for the operation. Use this to test your application.
      *
-     * @param boolean sandbox
+     * @param bool sandbox
      * @return $this
      */
     public function sandbox(bool $sandbox)
     {
         $this->sandbox = $sandbox;
+
         return $this;
     }
 }
