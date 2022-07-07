@@ -2,12 +2,11 @@
 
 namespace Parables\ArkeselSmsNotification;
 
-use Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Arr;
-use Illuminate\Notifications\Notification;
-use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Arr;
+use Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification;
 
 class ArkeselChannel
 {
@@ -33,8 +32,8 @@ class ArkeselChannel
     /**
      * Send the given notification.
      *
-     * @param mixed $notifiable
-     * @param \Illuminate\Notifications\Notification $notification
+     * @param  mixed  $notifiable
+     * @param  \Illuminate\Notifications\Notification  $notification
      *
      * @throws \Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification
      */
@@ -50,26 +49,26 @@ class ArkeselChannel
             $message = $msg;
         }
 
-        if (!empty($message->recipients)) {
-            $recipients = is_string($message->recipients) ? explode(",", $message->recipients) : $message->recipients;
+        if (! empty($message->recipients)) {
+            $recipients = is_string($message->recipients) ? explode(',', $message->recipients) : $message->recipients;
         } else {
             $recipients = Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification));
         }
 
         if (empty($recipients)) {
-            throw new Exception("No recipients were specified for this notification");
+            throw new Exception('No recipients were specified for this notification');
         }
 
         $payload = $this->apiVersion === 'v1'
             ? array_filter([
-                "action" => "send-sms",
-                "api_key" => $message->apiKey ?? $this->apiKey,
-                "to" => implode(",", $recipients),
-                "from" => $message->sender ?? $this->smsSender,
-                "sms" => $message->message,
-                "schedule" => $message->schedule ?? null,  // dd-mm-yyyy hh:mm AM/PM
+                'action' => 'send-sms',
+                'api_key' => $message->apiKey ?? $this->apiKey,
+                'to' => implode(',', $recipients),
+                'from' => $message->sender ?? $this->smsSender,
+                'sms' => $message->message,
+                'schedule' => $message->schedule ?? null,  // dd-mm-yyyy hh:mm AM/PM
             ])
-            :  array_filter([
+            : array_filter([
                 'sender' => $message->sender ?? $this->smsSender,
                 'recipients' => $recipients,
                 'message' => $message->message,
@@ -77,7 +76,6 @@ class ArkeselChannel
                 'scheduled_date' => $message->schedule ?? null,  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
                 'sandbox' => $message->sandbox ?? $this->smsSandbox,
             ]);
-
 
         try {
             $response = $this->client->request(
