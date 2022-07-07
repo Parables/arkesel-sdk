@@ -1,28 +1,26 @@
-Please see [this repo](https://github.com/laravel-notification-channels/channels) for instructions on how to submit a channel proposal.
+# Arkesel SDK
 
-# A Boilerplate repo for contributions
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/laravel-notification-channels/arkesel.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/arkesel)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/parables/arkesel-sdk.svg?style=flat-square)](https://packagist.org/packages/parables/arkesel-sdk)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/laravel-notification-channels/arkesel/master.svg?style=flat-square)](https://travis-ci.org/laravel-notification-channels/arkesel)
-[![StyleCI](https://styleci.io/repos/:style_ci_id/shield)](https://styleci.io/repos/:style_ci_id)
+[![Build Status](https://img.shields.io/travis/parables/arkesel-sdk/master.svg?style=flat-square)](https://travis-ci.org/parables/arkesel-sdk)
+[![StyleCI](https://styleci.io/repos/:style_ci_id/shield)](https://styleci.io/repos/510513476)
 [![SymfonyInsight](https://insight.symfony.com/projects/1d3afee3-9999-4c78-8305-f29bfde310dd/small.svg)](https://insight.symfony.com/projects/1d3afee3-9999-4c78-8305-f29bfde310dd)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/:sensio_labs_id.svg?style=flat-square)](https://insight.sensiolabs.com/projects/:sensio_labs_id)
-[![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/arkesel.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/arkesel)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/laravel-notification-channels/arkesel/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/arkesel/?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/arkesel.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/arkesel)
-
-This package makes it easy to send notifications using [Arkesel](https://arkesel.com/) with Laravel 5.5+, 6.x and 7.x
-
-This is where your description should go. Add a little code example so build can understand real quick how the package can be used. Try and limit it to a paragraph or two.
+[![Quality Score](https://img.shields.io/scrutinizer/g/parables/arkesel-sdk.svg?style=flat-square)](https://scrutinizer-ci.com/g/parables/arkesel-sdk)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/parables/arkesel-sdk/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/parables/arkesel-sdk/?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/parables/arkesel-sdk.svg?style=flat-square)](https://packagist.org/packages/parables/arkesel-sdk)
 
 ## Contents
 
-- [A Boilerplate repo for contributions](#a-boilerplate-repo-for-contributions)
+- [Arkesel SDK](#arkesel-sdk)
   - [Contents](#contents)
+  - [About](#about)
+  - [Features](#features)
   - [Installation](#installation)
     - [Setting up the Arkesel service](#setting-up-the-arkesel-service)
   - [Usage](#usage)
+    - [Bulk SMS](#bulk-sms)
+      - [Notifications to the `arkesel` channel](#notifications-to-the-arkesel-channel)
+      - [SMS Recipients](#sms-recipients)
     - [Available Message methods](#available-message-methods)
   - [Changelog](#changelog)
   - [Testing](#testing)
@@ -31,25 +29,173 @@ This is where your description should go. Add a little code example so build can
   - [Credits](#credits)
   - [License](#license)
 
+## About
+
+This is an unofficial SDK for [Arkesel](https://arkesel.com/) which is a wrapper around [Arkesel API] for PHP and Laravel applications.
+
+## Features
+
+- [x] Bulk SMS
+- [ ] Payment
+- [ ] Voice
+- [ ] Email
+- [ ] USSD
+
+This SDK includes a Laravel Notification channel that makes it possible to send out Laravel notifications as a SMS using [Arkesel API](https://arkesel.com/)
+
 ## Installation
 
-Please also include the steps for any third-party service setup that's required for this package.
+You can install this package via composer:
+
+```bash
+composer require parables/arkesel-sdk
+```
+
+The service provider gets loaded automatically.
+
+Then publish the config file
+
+```bash
+php artisan vendor:publish --provider="Parables\ArkeselSdk\ArkeselServiceProvider" --tag="config"
+```
 
 ### Setting up the Arkesel service
 
 First, create [Sign up](https://account.arkesel.com/signup) for an account. You will be taken to your [SMS Dashboard](https://sms.arkesel.com/user/sms-api/info) where you can find the SMS API keys.
 
-Add these to the `.env` file
+Then add your API key to the `.env` file
 
 ```env
+ARKESEL_SMS_API_KEY="your Arkesel API key"
 ```
 
-Next, copy this snippet into the `config/services.php` to load the environment variables.
+The following env variables can be used to customize the package.
+Refer to the [Arkesel Docs](https://developers.arkesel.com/) for more info
+
+```env
+ARKESEL_API_VERSION="v2" # or "v1"
+ARKESEL_SMS_URL= # for SMS API v1, use 'https://sms.arkesel.com/sms/api?action=send-sms`
+ARKESEL_SMS_SENDER= # defaults to your `APP_NAME` env variable
+ARKESEL_SMS_CALLBACK_URL= # for API SMS v2 only
+ARKESEL_SMS_SANDBOX= # for API SMS v2 only
+```
+
+## Usage
+
+### Bulk SMS
+
+#### Notifications to the `arkesel` channel
+
+Create a notification class. Refer to Laravel's documentation on [Notifications](https://laravel.com/docs/9.x/notifications).
+
+1. Add the Notifiable trait to your model
+
+    ```php
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+    use Illuminate\Notifications\Notifiable;
+
+    class User extends Authenticatable
+    {
+        use Notifiable;
+    }
+    ```
+
+2. Create a Notification
+
+    ```bash
+    php artisan make:notification OtpCodeRequested
+    ```
+
+    Then specify the channel with the `via()` method and the message to be sent using the `toArkesel($notifiable)` method
+
+    ```php
+    <?php
+
+    namespace App\Notifications;
+
+    use Parables\ArkeselSdk\NotificationChannel\ArkeselMessage;
+    use Illuminate\Notifications\Notification;
+    use Illuminate\Notifications\Messages\MailMessage;
+    use Illuminate\Contracts\Queue\ShouldQueue;
+    use Illuminate\Bus\Queueable;
+
+    class OtpCodeRequested extends Notification implements ShouldQueue
+    {
+        use Queueable;
+
+        protected string $message;
+
+        /**
+         * Create a new notification instance.
+         *
+         * @return void
+         */
+        public function __construct(string $message)
+        {
+            $this->message = $message;
+        }
+
+        /**
+         * Get the notification's delivery channels.
+         *
+         * @param  mixed  $notifiable
+         * @return array
+         */
+        public function via($notifiable)
+        {
+            return ['arkesel'];
+        }
+
+        public function toArkesel($notifiable)
+        {
+            return (new ArkeselMessage())
+                ->message($this->message);
+        }
+    }
+    ```
+
+3. Send the notification
+
+- Option 1: using the `notify()` method that is provided by the `Notifiable` trait
+
+    ```php
+    use App\Notifications\OtpCodeRequested;
+
+    $user->notify(new OtpCodeRequested($message));
+    ```
+
+- Option 2: using the Notification Facade
+
+    ```php
+    use Illuminate\Support\Facades\Notification;
+
+    Notification::send($users, new OtpCodeRequested($message));
+    ```
+
+- Option 3: On demand notification using the Notification's facade `route` method
+
+    ```php
+    Notification::route('arkesel', '233123456789')->notify(new OtpCodeRequested($message));
+    ```
+
+#### SMS Recipients
+
+You can chain the recipients to the `ArkeselMessage` builder
 
 ```php
+  public function toArkesel($notifiable)
+    {
+        return (new ArkeselMessage())
+            ->message($this->message)
+            ->recipients(["233123456789", "233123456789"]); //or "233123456789,233123456789"
+    }
 ```
 
-This package assumes that your notifiable Model has a `phone_number` field which will be used as the recipient of the notification. To customize this, add the `routeNotificationForArkesel` method which should return the field to be used.
+If no recipients are specified on the `ArkeselMessage` builder, this package will fallback to the `routeNotificationForArkesel` method defined in your notifiable model.
 
 ```php
 <?php
@@ -64,7 +210,7 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * Route notifications for the Africas Talking channel.
+     * Route notifications for the Arkesel channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification
      * @return string
@@ -76,13 +222,67 @@ class User extends Authenticatable
 }
 ```
 
-## Usage
+If that method is also not defined, this package assumes that your notifiable Model has a `phone_number` field which will be used as the recipient of the notification.
 
-Some code examples, make it clear how to use the package
+If there is no `phone_number` field on your notifiable model, this will throw an exception: `'No recipients were specified for this notification'`
 
 ### Available Message methods
 
-A list of all available options
+The following methods can be used on the `ArkeselMessage` builder to construct the message to be sent.
+
+- `constructor`
+
+    ```php
+    ArkeselMessage(
+        string $message = '',
+        string|array $recipients = null,
+        string $apiKey = null,
+        string $schedule = null,
+        string $sender = null,
+        string $callbackUrl = null,
+        bool $sandbox = false,
+    )
+    ```
+
+- `message(string $message)`  
+
+    set the message to be sent.
+
+- `apiKey(string $apiKey)`  
+
+    sets the API key to used to authenticate the request.
+
+    Overrides the API key set in the `.env` file.
+
+- `schedule(string $schedule)`  
+    set/schedule when the message should be sent.
+
+- `sender(string $sender)`  
+    set the name or number that identifies the sender of an SMS message.
+
+- `recipients(string|array $recipients)`  
+    set the phone numbers to receive the sms.
+
+- `callbackUrl(string $callbackUrl)`  
+    set a URL that will be called to notify you about the status of the message to a particular number.
+
+- `sandbox(bool $sandbox)`  
+    set the environment for sending sms.
+    if true, sms messages are not forwarded to the mobile network providers for delivery hence you are not billed for the operation. Use this to test your application.
+
+```php
+public function toArkesel($notifiable)
+{
+    return (new ArkeselMessage())
+        ->message("Your message")
+        ->recipients(["233123456789", "233123456789"]) //or "233123456789,233123456789"
+        ->apiKey("your API key") # this overrides the `.env` variable
+        ->schedule(now()->addMinutes(5))
+        ->sender("Company") // less than 11 characters
+        ->callbackUrl("https://my-sms-callback-url")
+        ->sandbox(false)
+}
+```
 
 ## Changelog
 

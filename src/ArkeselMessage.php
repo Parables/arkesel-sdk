@@ -1,6 +1,6 @@
 <?php
 
-namespace Parables\ArkeselSmsNotification;
+namespace Parables\ArkeselSdk\NotificationChannel;
 
 class ArkeselMessage
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Parables\ArkeselSmsNotification;
+namespace Parables\ArkeselSdk\NotificationChannel;
 
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
-use Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification;
+use Parables\ArkeselSdk\NotificationChannel\Exceptions\CouldNotSendNotification;
 
 class ArkeselChannel
 {
@@ -35,10 +35,14 @@ class ArkeselChannel
      * @param  mixed  $notifiable
      * @param  \Illuminate\Notifications\Notification  $notification
      *
-     * @throws \Parables\ArkeselSmsNotification\Exceptions\CouldNotSendNotification
+     * @throws \Parables\ArkeselSdk\NotificationChannel\Exceptions\CouldNotSendNotification
      */
     public function send($notifiable, Notification $notification)
     {
+        if (!method_exists($notification, 'toArkesel')) {
+            throw new Exception('"toArkesel($notifiable)" method does not exist');
+        }
+
         $msg = $notification->toArkesel($notifiable);
 
         if (is_string($msg)) {
@@ -49,7 +53,7 @@ class ArkeselChannel
             $message = $msg;
         }
 
-        if (! empty($message->recipients)) {
+        if (!empty($message->recipients)) {
             $recipients = is_string($message->recipients) ? explode(',', $message->recipients) : $message->recipients;
         } else {
             $recipients = Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification));

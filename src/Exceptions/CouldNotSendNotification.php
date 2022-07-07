@@ -1,6 +1,6 @@
 <?php
 
-namespace Parables\ArkeselSmsNotification\Exceptions;
+namespace Parables\ArkeselSdk\NotificationChannel\Exceptions;
 
 class CouldNotSendNotification extends \Exception
 {

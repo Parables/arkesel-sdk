@@ -1,9 +1,11 @@
 <?php
 
-namespace Parables\ArkeselSmsNotification;
+namespace Parables\ArkeselSdk;
 
+use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
+use Parables\ArkeselSdk\NotificationChannel\ArkeselChannel;
 
 class ArkeselServiceProvider extends ServiceProvider
 {
@@ -12,9 +14,9 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
+        $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
 
-        Notification::resolved(function (\Illuminate\Notifications\ChannelManager $service) {
+        Notification::resolved(function (ChannelManager $service) {
             $service->extend('arkesel', function ($app) {
                 return new ArkeselChannel($app['config']['arkesel']);
             });
@@ -28,7 +30,7 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
+                __DIR__ . '/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
             ], 'arkesel');
         }
     }

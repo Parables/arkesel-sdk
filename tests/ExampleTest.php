@@ -1,6 +1,6 @@
 <?php
 
-namespace Parables\ArkeselSmsNotification\Test;
+namespace Parables\ArkeselSdk\Test;
 
 use PHPUnit\Framework\TestCase;
 
