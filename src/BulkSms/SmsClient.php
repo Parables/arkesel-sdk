@@ -36,10 +36,6 @@ class SmsClient
 
     public function send(ArkeselMessage $message)
     {
-        if (empty($message->recipients)) {
-            throw new InvalidSmsMessageException(message: 'No recipients were specified for this notification');
-        }
-
         $payload = $this->apiVersion === 'v1'
             ? array_filter([
                 'action' => 'send-sms',
