@@ -85,7 +85,7 @@ class ArkeselMessage
         $this->apiKey = $apiKey;
         $this->schedule = $schedule;
         $this->sender = $sender;
-        $this->recipients = is_array($recipients) ?: explode(',', $recipients ?? '');
+        $this->recipients = is_array($recipients) ? $recipients : explode(',', $recipients ?? '');
         $this->callbackUrl = $callbackUrl;
         $this->sandbox = $sandbox;
     }
@@ -160,7 +160,7 @@ class ArkeselMessage
      */
     public function recipients(string|array $recipients): self
     {
-        $this->recipients = is_array($recipients) ?: explode(',', $recipients ?? '');
+        $this->recipients = is_array($recipients) ? $recipients : explode(',', $recipients ?? '');
 
         return $this;
     }

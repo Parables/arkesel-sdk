@@ -7,8 +7,9 @@
  */
 
 use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
+use Parables\ArkeselSdk\BulkSms\SmsClient;
 
-if (! function_exists('arkeselSms')) {
+if (!function_exists('arkeselSms')) {
     /**
      * Access the SmsClient class through helper.
      *
@@ -16,6 +17,6 @@ if (! function_exists('arkeselSms')) {
      */
     function arkeselSms(ArkeselMessage $message)
     {
-        return app('sms', [$message]);
+        return app(SmsClient::class, [$message]);
     }
 }
