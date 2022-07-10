@@ -1,11 +1,15 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 namespace Parables\ArkeselSdk\BulkSms;
 
-use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 

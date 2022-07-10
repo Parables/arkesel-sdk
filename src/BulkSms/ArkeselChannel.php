@@ -33,17 +33,16 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!method_exists($notification, 'toArkesel')) {
+        if (! method_exists($notification, 'toArkesel')) {
             throw new  InvalidSmsMessageException(message: '"toArkesel($notifiable)" method does not exist');
         }
 
         // get the message from the Notification class
         $message = $notification->toArkesel($notifiable);
 
-
         if (is_string($message)) {
             $message = new ArkeselMessage(message: $message);
-        } elseif (!$message instanceof ArkeselMessage) {
+        } elseif (! $message instanceof ArkeselMessage) {
             throw new  InvalidSmsMessageException(
                 message: '"toArkesel($notifiable)" must return either a string or an instance of ArkeselMessage'
             );
