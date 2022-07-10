@@ -58,20 +58,20 @@ class SmsClient
             ]);
 
         $response = null;
-        try {
-            $response = $this->client->request(
-                method: $this->apiVersion === 'v1' ? 'GET' : 'POST',
-                uri: $this->smsUrl,
-                options: array_filter([
-                    'headers' => array_filter([
-                        'api-key' => $this->apiVersion === 'v2' ? $this->apiKey : null,
-                    ]),
-                    'query' => $this->apiVersion === 'v1' ? $payload : null,
-                    'json' => $payload,
+        // try {
+        $response = $this->client->request(
+            method: $this->apiVersion === 'v1' ? 'GET' : 'POST',
+            uri: $this->smsUrl,
+            options: array_filter([
+                'headers' => array_filter([
+                    'api-key' => $this->apiVersion === 'v2' ? $this->apiKey : null,
                 ]),
-            );
-        } catch (\Throwable $th) {
-            throw new HandleSmsException(response: $response);
-        }
+                'query' => $this->apiVersion === 'v1' ? $payload : null,
+                'json' => $payload,
+            ]),
+        );
+        // } catch (\Throwable $th) {
+        //     throw new HandleSmsException(response: $response);
+        // }
     }
 }
