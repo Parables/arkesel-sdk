@@ -9,6 +9,7 @@
 namespace Parables\ArkeselSdk\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Parables\ArkeselSdk\BulkSms\SmsClient;
 
 /**
  * Sms Facade to send messages.
@@ -24,6 +25,6 @@ class Sms extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'sms';
+        return SmsClient::class;
     }
 }

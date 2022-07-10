@@ -10,6 +10,7 @@ namespace Parables\ArkeselSdk\BulkSms;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
@@ -25,6 +26,7 @@ class SmsClient
 
     public function __construct(array $config = [])
     {
+        Log::info('config', $config);
         $this->client = new Client(['base_uri' => 'https://sms.arkesel.com']);
         $this->apiKey = Arr::get($config, 'api_key');
         $this->apiVersion = Arr::get($config, 'api_version', 'v2');
