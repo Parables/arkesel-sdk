@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 namespace Parables\ArkeselSdk\Test;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
@@ -10,7 +16,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array
      */
     protected function getPackageProviders($app)
@@ -24,7 +29,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      * Override application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array
      */
     protected function getPackageAliases($app)

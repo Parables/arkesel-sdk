@@ -8,7 +8,6 @@
 
 namespace Parables\ArkeselSdk\Test;
 
-
 class ExampleTest extends TestCase
 {
     /** @test */

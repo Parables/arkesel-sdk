@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 use Parables\ArkeselSdk\Test\TestCase;
 
 /*
@@ -12,8 +18,6 @@ use Parables\ArkeselSdk\Test\TestCase;
 | need to change it using the "uses()" function to bind a different classes or traits.
 |
 */
-
-
 
 // uses(Tests\TestCase::class)->in('Feature');
 uses(TestCase::class);
