@@ -8,7 +8,6 @@
 
 namespace Parables\ArkeselSdk\Test;
 
-use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase
 {

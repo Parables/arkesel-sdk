@@ -57,6 +57,7 @@ class SmsClient
                 'sandbox' => $message->sandbox ?? $this->smsSandbox,
             ]);
 
+        $response = null;
         try {
             $response = $this->client->request(
                 method: $this->apiVersion === 'v1' ? 'GET' : 'POST',

@@ -18,6 +18,8 @@
         "guzzlehttp/guzzle": "^7.4",
         "laravel/framework": "^9.19",
         "mockery/mockery": "^1.0",
+        "orchestra/testbench": "^7.6",
+        "pestphp/pest": "^1.21",
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {
@@ -35,10 +37,16 @@
     },
     "scripts": {
         "test": "phpunit",
-        "test:coverage": "phpunit --coverage-text --coverage-clover=coverage.clover"
+        "test:coverage": "phpunit --coverage-text --coverage-clover=coverage.clover",
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {
