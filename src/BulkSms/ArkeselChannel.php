@@ -8,7 +8,10 @@
 
 namespace Parables\ArkeselSdk\BulkSms;
 
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class ArkeselChannel
@@ -48,10 +51,15 @@ class ArkeselChannel
         // if no recipients,
         // fallback to the `routeNotificationForArkesel()` method or the `phone_number` field on the model
         if (empty($message->recipients)) {
-            $message->recipients(
-                recipients: $notifiable->routeNotificationFor('arkesel', $notification)
-                    ?? $notifiable->phone_number
-            );
+            Log::info('No recipients on message');
+
+            $recipients = $notifiable instanceof AnonymousNotifiable
+                ? $notifiable->routeNotificationFor('arkesel')
+                : $notifiable->phone_number ?? [];
+
+            Log::info('recipients from notifiable', Arr::wrap($recipients));
+
+            $message->recipients($recipients);
         }
 
         $this->smsClient->send(message: $message);

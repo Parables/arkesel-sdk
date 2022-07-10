@@ -9,6 +9,7 @@
 namespace Parables\ArkeselSdk\BulkSms;
 
 use Illuminate\Support\Facades\Log;
+use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class ArkeselMessage
 {
@@ -48,9 +49,9 @@ class ArkeselMessage
     /**
      * phone numbers to which to Send message to.
      *
-     * @var array
+     * @var string|array
      */
-    public array $recipients;
+    public string|array $recipients;
 
     /**
      * A URL that will be called to notify you about the status of the message to a particular number.
@@ -162,6 +163,12 @@ class ArkeselMessage
      */
     public function recipients(string|array $recipients): self
     {
+        $recipients = array_unique(array_filter(is_string($recipients) ? explode(',', $recipients) : $recipients));
+
+        if (empty($recipients)) {
+            throw new InvalidSmsMessageException(message: 'No recipients were specified for this notification');
+        }
+
         $this->recipients = $recipients;
 
         Log::info('recipients', ['recipients' => $recipients]);
