@@ -22,11 +22,12 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
+        $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
 
         // Bind the main class to use with the facade
         $this->app->singleton(SmsClient::class, function ($app) {
             Log::info('config: ', config('arkesel'));
+
             return new SmsClient(config('arkesel'));
         });
 
@@ -44,7 +45,7 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
+                __DIR__.'/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
             ], 'arkesel');
         }
     }
