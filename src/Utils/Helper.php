@@ -9,13 +9,13 @@
 use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
 use Parables\ArkeselSdk\BulkSms\SmsClient;
 
-if (! function_exists('arkeselSms')) {
+if (! function_exists('arkeselSendSms')) {
     /**
      * Access the SmsClient class through helper.
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function arkeselSms(ArkeselMessage $message)
+    function arkeselSendSms(ArkeselMessage $message)
     {
         return app(SmsClient::class, [$message]);
     }

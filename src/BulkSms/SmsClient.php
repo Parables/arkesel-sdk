@@ -9,8 +9,6 @@
 namespace Parables\ArkeselSdk\BulkSms;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
@@ -24,16 +22,15 @@ class SmsClient
     protected ?string $smsCallbackUrl;
     protected bool $smsSandbox;
 
-    public function __construct(array $config = [])
+    public function __construct()
     {
-        Log::info('config', $config);
         $this->client = new Client(['base_uri' => 'https://sms.arkesel.com']);
-        $this->apiKey = Arr::get($config, 'api_key');
-        $this->apiVersion = Arr::get($config, 'api_version', 'v2');
-        $this->smsUrl = Arr::get($config, 'sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
-        $this->smsSender = Arr::get($config, 'sms_sender');
-        $this->smsCallbackUrl = Arr::get($config, 'sms_callback_url');
-        $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
+        $this->apiKey = config('arkesel.api_key');
+        $this->apiVersion = config('arkesel.api_version', 'v2');
+        $this->smsUrl = config('arkesel.sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
+        $this->smsSender = config('arkesel.sms_sender');
+        $this->smsCallbackUrl = config('arkesel.sms_callback_url');
+        $this->smsSandbox = config('arkesel.sms_sandbox', true);
     }
 
     public function send(ArkeselMessage $message)

@@ -9,7 +9,6 @@
 namespace Parables\ArkeselSdk;
 
 use Illuminate\Notifications\ChannelManager;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 use Parables\ArkeselSdk\BulkSms\ArkeselChannel;
@@ -25,10 +24,8 @@ class ArkeselServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
 
         // Bind the main class to use with the facade
-        $this->app->singleton(SmsClient::class, function ($app) {
-            Log::info('config: ', config('arkesel'));
-
-            return new SmsClient(config('arkesel'));
+        $this->app->singleton(SmsClient::class, function () {
+            return new SmsClient();
         });
 
         Notification::resolved(function (ChannelManager $service) {
