@@ -1,20 +1,15 @@
 <?php
 
-/*
- * @author Parables Boltnoel <parables95@gmail.com>
- * @package arkesel-sdk
- *  @version 1.0.0
- */
-
-namespace Parables\ArkeselSdk\NotificationChannel;
+namespace Parables\ArkeselSdk\BulkSms;
 
 use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
-use Parables\ArkeselSdk\NotificationChannel\Exceptions\CouldNotSendNotification;
+use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
+use Parables\ArkeselSdk\Exceptions\HandleSmsException;
+use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
-class ArkeselChannel
+class SmsClient
 {
     protected Client $client;
     protected string $apiKey;
@@ -35,52 +30,24 @@ class ArkeselChannel
         $this->smsSandbox = Arr::get($config, 'sms_sandbox', true);
     }
 
-    /**
-     * Send the given notification.
-     *
-     * @param  mixed  $notifiable
-     * @param  \Illuminate\Notifications\Notification  $notification
-     *
-     * @throws \Parables\ArkeselSdk\NotificationChannel\Exceptions\CouldNotSendNotification
-     */
-    public function send($notifiable, Notification $notification)
+    public function send(ArkeselMessage $message)
     {
-        if (! method_exists($notification, 'toArkesel')) {
-            throw new Exception('"toArkesel($notifiable)" method does not exist');
-        }
-
-        $msg = $notification->toArkesel($notifiable);
-
-        if (is_string($msg)) {
-            $message = new ArkeselMessage(message: $msg);
-        }
-
-        if ($msg instanceof ArkeselMessage) {
-            $message = $msg;
-        }
-
-        if (! empty($message->recipients)) {
-            $recipients = is_string($message->recipients) ? explode(',', $message->recipients) : $message->recipients;
-        } else {
-            $recipients = Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification));
-        }
-
-        if (empty($recipients)) {
-            throw new Exception('No recipients were specified for this notification');
+        if (empty($message->recipients)) {
+            throw new InvalidSmsMessageException(message: 'No recipients were specified for this notification');
         }
 
         $payload = $this->apiVersion === 'v1'
             ? array_filter([
                 'action' => 'send-sms',
                 'api_key' => $message->apiKey ?? $this->apiKey,
-                'to' => implode(',', $recipients),
+                'to' => implode(',', $message->recipients),
                 'from' => $message->sender ?? $this->smsSender,
                 'sms' => $message->message,
                 'schedule' => $message->schedule ?? null,  // dd-mm-yyyy hh:mm AM/PM
             ])
             : array_filter([
                 'sender' => $message->sender ?? $this->smsSender,
-                'recipients' => $recipients,
+                'recipients' => $message->recipients,
                 'message' => $message->message,
                 'callback_url' => $message->callbackUrl ?? $this->smsCallbackUrl,
                 'scheduled_date' => $message->schedule ?? null,  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
@@ -100,7 +67,7 @@ class ArkeselChannel
                 ]),
             );
         } catch (\Throwable $th) {
-            throw CouldNotSendNotification::serviceRespondedWithAnError($response);
+            throw new HandleSmsException(response: $response);
         }
     }
 }

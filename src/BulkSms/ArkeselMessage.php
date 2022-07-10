@@ -1,12 +1,12 @@
 <?php
 
 /*
- * @author Parables Boltnoel <parables95@gmail.com>
- * @package arkesel-sdk
- *  @version 1.0.0
- */
+* @author Parables Boltnoel <parables95@gmail.com>
+* @package arkesel-sdk
+*  @version 1.0.0
+*/
 
-namespace Parables\ArkeselSdk\NotificationChannel;
+namespace Parables\ArkeselSdk\BulkSms;
 
 class ArkeselMessage
 {
@@ -46,13 +46,9 @@ class ArkeselMessage
     /**
      * phone numbers to which to Send message to.
      *
-     * @var string|array
-     *
-     * SMS API V1: "233544919953,233544919953,233544919953"
-     *
-     * SMS API V2: ["233544919953", "233544919953", "233544919953"]
+     * @var array
      */
-    public string|array|null $recipients;
+    public array $recipients;
 
     /**
      * A URL that will be called to notify you about the status of the message to a particular number.
@@ -89,7 +85,7 @@ class ArkeselMessage
         $this->apiKey = $apiKey;
         $this->schedule = $schedule;
         $this->sender = $sender;
-        $this->recipients = $recipients;
+        $this->recipients = is_array($recipients) ?: explode(',', $recipients ?? '');
         $this->callbackUrl = $callbackUrl;
         $this->sandbox = $sandbox;
     }
@@ -100,7 +96,7 @@ class ArkeselMessage
      * @param  string  $message
      * @return $this
      */
-    public function message(string $message)
+    public function message(string $message): self
     {
         $this->message = $message;
 
@@ -114,7 +110,7 @@ class ArkeselMessage
      * @param  string  $apiKey
      * @return $this
      */
-    public function apiKey(string $apiKey)
+    public function apiKey(string $apiKey): self
     {
         $this->apiKey = $apiKey;
 
@@ -132,7 +128,7 @@ class ArkeselMessage
      * @param  string  $schedule
      * @return $this
      */
-    public function schedule(string $schedule)
+    public function schedule(string $schedule): self
     {
         $this->schedule = $schedule;
 
@@ -145,7 +141,7 @@ class ArkeselMessage
      * @param  string  $sender
      * @return $this
      */
-    public function sender(string $sender)
+    public function sender(string $sender): self
     {
         $this->sender = $sender;
 
@@ -155,8 +151,6 @@ class ArkeselMessage
     /**
      * set the phone numbers to receive the sms.
      *
-     * @var string|array
-     *
      * SMS API V1: "233544919953,233544919953,233544919953"
      *
      * SMS API V2: ["233544919953", "233544919953", "233544919953"]
@@ -164,9 +158,9 @@ class ArkeselMessage
      * @param  string|array  $recipients
      * @return $this
      */
-    public function recipients(string|array $recipients)
+    public function recipients(string|array $recipients): self
     {
-        $this->recipients = $recipients;
+        $this->recipients = is_array($recipients) ?: explode(',', $recipients ?? '');
 
         return $this;
     }
@@ -180,7 +174,7 @@ class ArkeselMessage
      *
      * @return $this
      */
-    public function callbackUrl(string $callbackUrl)
+    public function callbackUrl(string $callbackUrl): self
     {
         $this->callbackUrl = $callbackUrl;
 
@@ -194,7 +188,7 @@ class ArkeselMessage
      * @param bool sandbox
      * @return $this
      */
-    public function sandbox(bool $sandbox)
+    public function sandbox(bool $sandbox): self
     {
         $this->sandbox = $sandbox;
 

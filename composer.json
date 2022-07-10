@@ -23,7 +23,10 @@
     "autoload": {
         "psr-4": {
             "Parables\\ArkeselSdk\\": "src"
-        }
+        },
+        "files": [
+            "src/Utils/Helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -41,7 +44,10 @@
         "laravel": {
             "providers": [
                 "Parables\\ArkeselSdk\\ArkeselServiceProvider"
-            ]
+            ],
+            "alias": {
+                "Sms": "Parables\\ArkeselSdk\\Facades\\Sms"
+            }
         }
     }
 }
