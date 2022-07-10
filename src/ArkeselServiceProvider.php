@@ -11,8 +11,8 @@ namespace Parables\ArkeselSdk;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
+use Parables\ArkeselSdk\BulkSms\ArkeselChannel;
 use Parables\ArkeselSdk\BulkSms\SmsClient;
-use Parables\ArkeselSdk\NotificationChannel\ArkeselChannel;
 
 class ArkeselServiceProvider extends ServiceProvider
 {

@@ -6,12 +6,10 @@
  *  @version 1.0.0
  */
 
-namespace Parables\ArkeselSdk\NotificationChannel;
+namespace Parables\ArkeselSdk\BulkSms;
 
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
-use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
-use Parables\ArkeselSdk\BulkSms\SmsClient;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class ArkeselChannel
