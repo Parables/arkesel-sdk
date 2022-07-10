@@ -10,7 +10,7 @@ namespace Parables\ArkeselSdk\Exceptions;
 
 class HandleSmsException extends \Exception
 {
-    public static function __construct($response)
+    public function __construct($response)
     {
         if ($response->getStatusCode() === 100) {
             $errorMsg = 'Bad gateway request';
