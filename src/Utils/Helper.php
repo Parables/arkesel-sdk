@@ -9,7 +9,7 @@
 use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
 use Parables\ArkeselSdk\BulkSms\SmsClient;
 
-if (!function_exists('arkeselSendSms')) {
+if (! function_exists('arkeselSendSms')) {
     /**
      * Access the SmsClient class through helper.
      *
