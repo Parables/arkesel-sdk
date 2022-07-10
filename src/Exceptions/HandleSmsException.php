@@ -6,11 +6,11 @@
  *  @version 1.0.0
  */
 
-namespace Parables\ArkeselSdk\NotificationChannel\Exceptions;
+namespace Parables\ArkeselSdk\Exceptions;
 
-class CouldNotSendNotification extends \Exception
+class HandleSmsException extends \Exception
 {
-    public static function serviceRespondedWithAnError($response)
+    public static function __construct($response)
     {
         if ($response->getStatusCode() === 100) {
             $errorMsg = 'Bad gateway request';
