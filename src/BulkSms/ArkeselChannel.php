@@ -9,7 +9,6 @@
 namespace Parables\ArkeselSdk\BulkSms;
 
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Arr;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class ArkeselChannel
@@ -50,8 +49,8 @@ class ArkeselChannel
         // fallback to the `routeNotificationForArkesel()` method or the `phone_number` field on the model
         if (empty($message->recipients)) {
             $message->recipients(
-                recipients: Arr::wrap($notifiable->routeNotificationFor('arkesel', $notification)
-                    ?? $notifiable->phone_number)
+                recipients: $notifiable->routeNotificationFor('arkesel', $notification)
+                    ?? $notifiable->phone_number
             );
         }
 

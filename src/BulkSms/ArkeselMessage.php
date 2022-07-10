@@ -8,6 +8,8 @@
 
 namespace Parables\ArkeselSdk\BulkSms;
 
+use Illuminate\Support\Facades\Log;
+
 class ArkeselMessage
 {
     /**
@@ -160,7 +162,9 @@ class ArkeselMessage
      */
     public function recipients(string|array $recipients): self
     {
-        $this->recipients = is_array($recipients) ? $recipients : explode(',', $recipients ?? '');
+        $this->recipients = $recipients;
+
+        Log::info('recipients', ['recipients' => $recipients]);
 
         return $this;
     }

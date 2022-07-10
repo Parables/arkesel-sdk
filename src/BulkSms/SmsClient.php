@@ -9,6 +9,7 @@
 namespace Parables\ArkeselSdk\BulkSms;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
 use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
@@ -56,6 +57,8 @@ class SmsClient
                 'scheduled_date' => $message->schedule ?? null,  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
                 'sandbox' => $message->sandbox ?? $this->smsSandbox,
             ]);
+
+        Log::info('payload', $payload);
 
         $response = null;
         // try {
