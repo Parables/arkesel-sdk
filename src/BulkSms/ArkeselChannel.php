@@ -6,7 +6,7 @@
  *  @version 1.0.0
  */
 
-namespace Parables\ArkeselSdk\NotificationChannel;
+namespace Parables\ArkeselSdk\BulkSms;
 
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
@@ -33,7 +33,7 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (! method_exists($notification, 'toArkesel')) {
+        if (!method_exists($notification, 'toArkesel')) {
             throw new  InvalidSmsMessageException(message: '"toArkesel($notifiable)" method does not exist');
         }
 
@@ -42,7 +42,7 @@ class ArkeselChannel
 
         if (is_string($message)) {
             $message = new ArkeselMessage(message: $message);
-        } elseif (! $message instanceof ArkeselMessage) {
+        } elseif (!$message instanceof ArkeselMessage) {
             throw new  InvalidSmsMessageException(
                 message: '"toArkesel($notifiable)" must return either a string or an instance of ArkeselMessage'
             );
