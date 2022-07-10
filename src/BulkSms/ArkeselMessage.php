@@ -164,7 +164,7 @@ class ArkeselMessage
     {
         $this->recipients = $recipients;
 
-        Log::info("recipients", ['recipients' => $recipients]);
+        Log::info('recipients', ['recipients' => $recipients]);
 
         return $this;
     }
