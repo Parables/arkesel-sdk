@@ -11,7 +11,6 @@ namespace Parables\ArkeselSdk\BulkSms;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
-use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class SmsClient
 {

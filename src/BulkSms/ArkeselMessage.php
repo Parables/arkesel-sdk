@@ -163,7 +163,7 @@ class ArkeselMessage
      */
     public function recipients(string|array $recipients): self
     {
-        $recipients =  array_unique(array_filter(is_string($recipients) ? explode(",", $recipients) : $recipients));
+        $recipients = array_unique(array_filter(is_string($recipients) ? explode(',', $recipients) : $recipients));
 
         if (empty($recipients)) {
             throw new InvalidSmsMessageException(message: 'No recipients were specified for this notification');

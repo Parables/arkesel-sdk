@@ -33,7 +33,7 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!method_exists($notification, 'toArkesel')) {
+        if (! method_exists($notification, 'toArkesel')) {
             throw new  InvalidSmsMessageException(message: '"toArkesel($notifiable)" method does not exist');
         }
 
@@ -42,7 +42,7 @@ class ArkeselChannel
 
         if (is_string($message)) {
             $message = new ArkeselMessage(message: $message);
-        } elseif (!$message instanceof ArkeselMessage) {
+        } elseif (! $message instanceof ArkeselMessage) {
             throw new  InvalidSmsMessageException(
                 message: '"toArkesel($notifiable)" must return either a string or an instance of ArkeselMessage'
             );
@@ -53,10 +53,9 @@ class ArkeselChannel
         if (empty($message->recipients)) {
             Log::info('No recipients on message');
 
-            $recipients =  $notifiable instanceof AnonymousNotifiable
+            $recipients = $notifiable instanceof AnonymousNotifiable
                 ? $notifiable->routeNotificationFor('arkesel')
                 : $notifiable->phone_number ?? [];
-
 
             Log::info('recipients from notifiable', Arr::wrap($recipients));
 
