@@ -13,9 +13,8 @@ use Parables\ArkeselSdk\Test\TestCase;
 uses(TestCase::class);
 
 // TEST: replace these with real values
-$recipients = ["233234567890", "233234567890"];
-$apiKey = "62cc5136389d1";
-
+$recipients = ['233234567890', '233234567890'];
+$apiKey = '62cc5136389d1';
 
 test('receives config array', function () use ($apiKey) {
     expect(arkeselSms()->getConfig())->toMatchArray([
@@ -43,13 +42,11 @@ test('message builder:throws on empty message', function () {
     expect(fn () => $builder->message(' '))->toThrow(ArkeselMessageBuilderException::class);
 });
 
-
 test('message builder:throws api is required', function () {
     $builder = new ArkeselMessageBuilder();
     expect(fn () => $builder->apiKey(''))->toThrow(ArkeselMessageBuilderException::class);
     expect(fn () => $builder->apiKey(' '))->toThrow(ArkeselMessageBuilderException::class);
 });
-
 
 test('message builder:throws no recipients for sms', function () {
     $builder = new ArkeselMessageBuilder();

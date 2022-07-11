@@ -13,6 +13,7 @@ use Parables\ArkeselSdk\BulkSms\ArkeselSms as Sms;
 
 /**
  * ArkeselSms Facade to send messages.
+ *
  * @method static self make(?ArkeselMessageBuilder $builder)
  * @method static self getConfig(): array
  * @method static self message(string $message)

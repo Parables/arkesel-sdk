@@ -12,9 +12,8 @@ use Parables\ArkeselSdk\Test\TestCase;
 uses(TestCase::class);
 
 // TEST: replace these with real values
-$recipients = ["233234567890", "233234567890"];
-$apiKey = "62cc5136389d1";
-
+$recipients = ['233234567890', '233234567890'];
+$apiKey = '62cc5136389d1';
 
 test('notification: sent on demand', function () {
     //
@@ -31,7 +30,6 @@ test('notification: sent using an ArkeselMessageBuilder', function () {
 // More Tests
 // notification: with string message that creates new MessageBuilderInstances
 // notification: using ArkeselMessageBuilder
-
 
 class TestNotification extends Notification
 {

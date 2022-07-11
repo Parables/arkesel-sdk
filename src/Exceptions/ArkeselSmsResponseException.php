@@ -13,9 +13,9 @@ use Illuminate\Http\Client\Response;
 class ArkeselSmsResponseException extends \Exception
 {
     /**
-     * handle Sms response errors from Arkesel
+     * handle Sms response errors from Arkesel.
      *
-     * @param \Illuminate\Http\Client\Response $response
+     * @param  \Illuminate\Http\Client\Response  $response
      */
     public static function handleResponse(Response $response)
     {
@@ -51,6 +51,6 @@ class ArkeselSmsResponseException extends \Exception
             $errorMsg = 'Unknown Error';
         }
 
-        return new static($errorMsg . ": " . $response->json('message'));
+        return new static($errorMsg.': '.$response->json('message'));
     }
 }

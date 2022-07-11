@@ -92,7 +92,7 @@ class ArkeselMessageBuilder
     /**
      * Get the sms message.
      *
-     * @return  string
+     * @return string
      */
     public function getMessage(): string
     {
@@ -119,7 +119,7 @@ class ArkeselMessageBuilder
     /**
      * Get the name or number that identifies the sender of the SMS.
      *
-     * @return  null|string
+     * @return null|string
      */
     public function getSender(): null|string
     {
@@ -144,9 +144,9 @@ class ArkeselMessageBuilder
                     is_string($recipients)
                         ? explode(',', $recipients)
                         : $recipients,
-                    fn ($recipient) => is_string($recipient) && !empty(trim($recipient))
+                    fn ($recipient) => is_string($recipient) && ! empty(trim($recipient))
                 )
-            )
+            ),
         ];
 
         throw_if(empty($recipients), ArkeselMessageBuilderException::noRecipients());
@@ -161,7 +161,7 @@ class ArkeselMessageBuilder
     /**
      * Get phone numbers to which to send sms to.
      *
-     * @return  string|array
+     * @return string|array
      */
     public function getRecipients(string $apiVersion = 'v2'): string|array
     {
@@ -178,8 +178,9 @@ class ArkeselMessageBuilder
      * @see https://developers.arkesel.com/#operation/send_sms
      *
      * @param  string|Carbon  $schedule
-     * @throws InvalidFormatException
      * @return $this
+     *
+     * @throws InvalidFormatException
      */
     public function schedule(string|Carbon $schedule): self
     {
@@ -192,18 +193,20 @@ class ArkeselMessageBuilder
 
     /**
      * Get schedule when the sms should be sent.
-     * @param string $apiVersion
-     * @return  null|string
+     *
+     * @param  string  $apiVersion
+     * @return null|string
      */
     public function getSchedule(string $apiVersion = 'v2'): null|string
     {
-        if (!empty($this->schedule)) {
+        if (! empty($this->schedule)) {
             return $this->schedule->format(
                 $apiVersion === 'v1'
                     ? 'd-m-Y h:i A'  //E.g: "13-01-2021 05:30 PM"
                     : 'Y-m-d h:i A'  //E.g: "2021-03-17 07:00 AM"
             );
         }
+
         return null;
     }
 
@@ -226,7 +229,7 @@ class ArkeselMessageBuilder
     /**
      * Get a URL that will be called to notify you about the status of the sms to a particular number.
      *
-     * @return  null|string
+     * @return null|string
      */
     public function getCallbackUrl(): null|string
     {
@@ -234,7 +237,7 @@ class ArkeselMessageBuilder
     }
 
     /**
-     * set the environment mode. In sandbox mode, sms are not delivered to the recipients
+     * set the environment mode. In sandbox mode, sms are not delivered to the recipients.
      *
      * @param bool sandbox
      * @return $this
@@ -247,9 +250,9 @@ class ArkeselMessageBuilder
     }
 
     /**
-     * Get the SMS environment mode
+     * Get the SMS environment mode.
      *
-     * @return  null|bool
+     * @return null|bool
      */
     public function getSandbox(): null|bool
     {
@@ -277,7 +280,7 @@ class ArkeselMessageBuilder
     /**
      * Get arkesel SMS API Key to use for this request.
      *
-     * @return  null|string
+     * @return null|string
      */
     public function getApiKey(): null|string
     {

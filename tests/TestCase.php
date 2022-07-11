@@ -49,7 +49,7 @@ class TestCase extends Orchestra
      */
     protected function defineEnvironment($app)
     {
-        $app['config']->set('arkesel',  [
+        $app['config']->set('arkesel', [
             'api_key' => '62cc5136389d1', // TEST: Replace with a valid SMS API key
             'api_version' => 'v2',
             'sms_url' => 'https://sms.arkesel.com/api/v2/sms/send',

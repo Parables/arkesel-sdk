@@ -25,7 +25,7 @@ class ArkeselChannel
     public function send($notifiable, Notification $notification)
     {
         throw_if(
-            !method_exists($notification, 'toArkesel'),
+            ! method_exists($notification, 'toArkesel'),
             ArkeselNotificationChannelException::methodDoesNotExist(notification: $notification),
         );
 

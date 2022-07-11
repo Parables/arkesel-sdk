@@ -32,11 +32,11 @@ class ArkeselSms
         $this->smsSender = config('arkesel.sms_sender');
         $this->smsCallbackUrl = config('arkesel.sms_callback_url');
         $this->smsSandbox = config('arkesel.sms_sandbox', false);
-        $this->builder = $builder ??  new ArkeselMessageBuilder();
+        $this->builder = $builder ?? new ArkeselMessageBuilder();
     }
 
     /**
-     * proxy to the __constructor to be used as a Facade
+     * proxy to the __constructor to be used as a Facade.
      *
      * @return array
      */
@@ -48,7 +48,7 @@ class ArkeselSms
     }
 
     /**
-     * return an array of the values received from the `config/arkesel.php` file
+     * return an array of the values received from the `config/arkesel.php` file.
      *
      * @return array
      */
@@ -56,7 +56,6 @@ class ArkeselSms
     {
         return config('arkesel');
     }
-
 
     /**
      * set the content to be sent.
@@ -164,7 +163,7 @@ class ArkeselSms
     }
 
     /**
-     * sends the sms to the recipients
+     * sends the sms to the recipients.
      *
      * @return Response
      */
@@ -207,7 +206,7 @@ class ArkeselSms
 
     /**
      * set the optional properties of the ArkeselMessageBuilder
-     * to use the default values specified in the `arkesel` config file
+     * to use the default values specified in the `arkesel` config file.
      *
      * @return void
      */
