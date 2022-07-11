@@ -22,11 +22,6 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
 
-        // // Bind the main class to use with the facade
-        /*       $this->app->singleton(ArkeselSms::class, function () {
-            return new ArkeselSms();
-        }); */
-
         Notification::resolved(function (ChannelManager $service) {
             $service->extend('arkesel', function () {
                 return new ArkeselChannel();
