@@ -37,10 +37,7 @@
     },
     "scripts": {
         "test": "pest",
-        "test:coverage": "pest --coverage-text --coverage-clover=coverage.clover",
-        "post-autoload-dump": [
-            "@php ./vendor/bin/testbench package:discover --ansi"
-        ]
+        "test:coverage": "pest --coverage-text --coverage-clover=coverage.clover"
     },
     "config": {
         "sort-packages": true,
