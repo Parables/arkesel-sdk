@@ -8,6 +8,7 @@
 
 namespace Parables\ArkeselSdk\BulkSms;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +36,19 @@ class ArkeselSms
     }
 
     /**
-     * return an array of the values in the `config/arkesel.php` file
+     * proxy to the __constructor to be used as a Facade
+     *
+     * @return array
+     */
+    public function make(?ArkeselMessageBuilder $builder): self
+    {
+        $this->__construct($builder);
+
+        return $this;
+    }
+
+    /**
+     * return an array of the values received from the `config/arkesel.php` file
      *
      * @return array
      */
@@ -150,7 +163,12 @@ class ArkeselSms
         return $this;
     }
 
-    public function send()
+    /**
+     * sends the sms to the recipients
+     *
+     * @return Response
+     */
+    public function send(): Response
     {
         $this->setMessageBuilderDefaults();
 
@@ -193,7 +211,7 @@ class ArkeselSms
      *
      * @return void
      */
-    public function setMessageBuilderDefaults()
+    protected function setMessageBuilderDefaults()
     {
         $this->builder->apiKey($this->builder->getApiKey() ?? $this->apiKey ?? '');
         $this->builder->sender($this->builder->getSender() ?? $this->smsSender ?? '');
