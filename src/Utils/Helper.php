@@ -6,17 +6,16 @@
  *  @version 1.0.0
  */
 
-use Parables\ArkeselSdk\BulkSms\ArkeselMessage;
-use Parables\ArkeselSdk\BulkSms\SmsClient;
+use Parables\ArkeselSdk\BulkSms\Sms;
 
-if (! function_exists('arkeselSendSms')) {
+if (!function_exists('arkeselSms')) {
     /**
-     * Access the SmsClient class through helper.
+     * Access the Sms class through helper.
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Sms
      */
-    function arkeselSendSms(ArkeselMessage $message)
+    function arkeselSms()
     {
-        return app(SmsClient::class, [$message]);
+        return app(Sms::class);
     }
 }

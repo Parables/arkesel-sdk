@@ -16,11 +16,11 @@ use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
 
 class ArkeselChannel
 {
-    protected SmsClient $smsClient;
+    protected Sms $sms;
 
-    public function __construct(SmsClient $smsClient)
+    public function __construct(Sms $sms)
     {
-        $this->smsClient = $smsClient;
+        $this->sms = $sms;
     }
 
     /**
@@ -33,7 +33,7 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (! method_exists($notification, 'toArkesel')) {
+        if (!method_exists($notification, 'toArkesel')) {
             throw new  InvalidSmsMessageException(message: '"toArkesel($notifiable)" method does not exist');
         }
 
@@ -41,8 +41,8 @@ class ArkeselChannel
         $message = $notification->toArkesel($notifiable);
 
         if (is_string($message)) {
-            $message = new ArkeselMessage(message: $message);
-        } elseif (! $message instanceof ArkeselMessage) {
+            $message = new ArkeselMessage(content: $message);
+        } elseif (!$message instanceof ArkeselMessage) {
             throw new  InvalidSmsMessageException(
                 message: '"toArkesel($notifiable)" must return either a string or an instance of ArkeselMessage'
             );
@@ -62,6 +62,9 @@ class ArkeselChannel
             $message->recipients($recipients);
         }
 
-        $this->smsClient->send(message: $message);
+        $this->sms
+            ->message($message->content)
+            ->to($message->recipients)
+            ->send();
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 use Parables\ArkeselSdk\BulkSms\ArkeselChannel;
-use Parables\ArkeselSdk\BulkSms\SmsClient;
+use Parables\ArkeselSdk\BulkSms\Sms;
 
 class ArkeselServiceProvider extends ServiceProvider
 {
@@ -21,16 +21,16 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
+        $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
 
-        // Bind the main class to use with the facade
-        $this->app->singleton(SmsClient::class, function () {
-            return new SmsClient();
-        });
+        // // Bind the main class to use with the facade
+        // $this->app->singleton(Sms::class, function () {
+        //     return new Sms();
+        // });
 
         Notification::resolved(function (ChannelManager $service) {
             $service->extend('arkesel', function ($app) {
-                return new ArkeselChannel($app->make(SmsClient::class));
+                return new ArkeselChannel($app->make(Sms::class));
             });
         });
     }
@@ -42,7 +42,7 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
+                __DIR__ . '/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
             ], 'arkesel');
         }
     }

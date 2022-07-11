@@ -9,12 +9,12 @@
 namespace Parables\ArkeselSdk\BulkSms;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Parables\ArkeselSdk\Exceptions\HandleSmsException;
 
 class SmsClient
 {
-    protected Client $client;
     protected string $apiKey;
     protected string $apiVersion;
     protected string $smsUrl;
@@ -24,7 +24,6 @@ class SmsClient
 
     public function __construct()
     {
-        $this->client = new Client(['base_uri' => 'https://sms.arkesel.com']);
         $this->apiKey = config('arkesel.api_key');
         $this->apiVersion = config('arkesel.api_version', 'v2');
         $this->smsUrl = config('arkesel.sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
@@ -55,19 +54,16 @@ class SmsClient
 
         Log::info('payload', $payload);
 
-        $response = null;
         // try {
-        $response = $this->client->request(
-            method: $this->apiVersion === 'v1' ? 'GET' : 'POST',
-            uri: $this->smsUrl,
-            options: array_filter([
-                'headers' => array_filter([
-                    'api-key' => $this->apiVersion === 'v2' ? $this->apiKey : null,
-                ]),
-                'query' => $this->apiVersion === 'v1' ? $payload : null,
-                'json' => $payload,
-            ]),
-        );
+        $response = $this->apiVersion === 'v1'
+            ? Http::get($this->smsUrl, $payload)
+            : Http::withHeaders([
+                'api-key' => $this->apiKey,
+            ])->post($this->smsUrl, $payload);
+
+        Log::info('SMS Client: ', ['response' => $response->json()]);
+
+        return $response;
         // } catch (\Throwable $th) {
         //     throw new HandleSmsException(response: $response);
         // }
