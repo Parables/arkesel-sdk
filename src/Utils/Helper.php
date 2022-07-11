@@ -6,16 +6,17 @@
  *  @version 1.0.0
  */
 
-use Parables\ArkeselSdk\BulkSms\Sms;
+use Parables\ArkeselSdk\BulkSms\ArkeselMessageBuilder;
+use Parables\ArkeselSdk\BulkSms\ArkeselSms;
 
 if (!function_exists('arkeselSms')) {
     /**
-     * Access the Sms class through helper.
+     * Access the ArkeselSms class through helper.
      *
-     * @return Sms
+     * @return ArkeselSms
      */
-    function arkeselSms()
+    function arkeselSms(ArkeselMessageBuilder $builder = null)
     {
-        return app(Sms::class);
+        return app(ArkeselSms::class, ['builder' => $builder]);
     }
 }

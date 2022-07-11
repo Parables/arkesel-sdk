@@ -10,19 +10,10 @@ namespace Parables\ArkeselSdk\BulkSms;
 
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
-use Parables\ArkeselSdk\Exceptions\InvalidSmsMessageException;
+use Parables\ArkeselSdk\Exceptions\ArkeselNotificationChannelException;
 
 class ArkeselChannel
 {
-    protected Sms $sms;
-
-    public function __construct(Sms $sms)
-    {
-        $this->sms = $sms;
-    }
-
     /**
      * Send the given notification.
      *
@@ -33,38 +24,34 @@ class ArkeselChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!method_exists($notification, 'toArkesel')) {
-            throw new  InvalidSmsMessageException(message: '"toArkesel($notifiable)" method does not exist');
-        }
+        throw_if(
+            !method_exists($notification, 'toArkesel'),
+            ArkeselNotificationChannelException::methodDoesNotExist(notification: $notification),
+        );
 
         // get the message from the Notification class
-        $message = $notification->toArkesel($notifiable);
+        $toArkesel = $notification->toArkesel($notifiable);
 
-        if (is_string($message)) {
-            $message = new ArkeselMessage(content: $message);
-        } elseif (!$message instanceof ArkeselMessage) {
-            throw new  InvalidSmsMessageException(
-                message: '"toArkesel($notifiable)" must return either a string or an instance of ArkeselMessage'
-            );
+        $messageBuilder = new ArkeselMessageBuilder();
+
+        if (is_string($toArkesel)) {
+            $messageBuilder->message(message: $toArkesel);
+        } elseif ($toArkesel instanceof ArkeselMessageBuilder) {
+            $messageBuilder = $toArkesel;
+        } else {
+            throw ArkeselNotificationChannelException::invalidReturnType($notification);
         }
 
         // if no recipients,
         // fallback to the `routeNotificationForArkesel()` method or the `phone_number` field on the model
-        if (empty($message->recipients)) {
-            Log::info('No recipients on message');
-
-            $recipients = $notifiable instanceof AnonymousNotifiable
-                ? $notifiable->routeNotificationFor('arkesel')
-                : $notifiable->phone_number ?? [];
-
-            Log::info('recipients from notifiable', Arr::wrap($recipients));
-
-            $message->recipients($recipients);
+        if (empty($messageBuilder->getRecipients())) {
+            $messageBuilder->recipients(
+                $notifiable instanceof AnonymousNotifiable
+                    ? $notifiable->routeNotificationFor('arkesel')
+                    : $notifiable->phone_number ?? []
+            );
         }
 
-        $this->sms
-            ->message($message->content)
-            ->to($message->recipients)
-            ->send();
+        arkeselSms(builder: $messageBuilder)->send();
     }
 }

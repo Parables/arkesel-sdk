@@ -8,7 +8,7 @@
 
 namespace Parables\ArkeselSdk\Exceptions;
 
-class MessageBuilderException extends \Exception
+class ArkeselMessageBuilderException extends \Exception
 {
     public static function messageIsEmpty()
     {

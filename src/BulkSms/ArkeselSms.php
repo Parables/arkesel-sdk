@@ -8,11 +8,12 @@
 
 namespace Parables\ArkeselSdk\BulkSms;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Parables\ArkeselSdk\Exceptions\ArkeselSmsException;
+use Parables\ArkeselSdk\Exceptions\ArkeselSmsResponseException;
 
-class Sms
+class ArkeselSms
 {
     protected string $smsUrl;
     protected string $apiVersion;
@@ -20,9 +21,9 @@ class Sms
     protected ?string $smsSender;
     protected ?string $smsCallbackUrl;
     protected bool $smsSandbox;
-    protected MessageBuilder $builder;
+    protected ArkeselMessageBuilder $builder;
 
-    public function __construct()
+    public function __construct(?ArkeselMessageBuilder $builder)
     {
         $this->smsUrl = config('arkesel.sms_url', 'https://sms.arkesel.com/api/v2/sms/send');
         $this->apiVersion = config('arkesel.api_version', 'v2');
@@ -30,7 +31,17 @@ class Sms
         $this->smsSender = config('arkesel.sms_sender');
         $this->smsCallbackUrl = config('arkesel.sms_callback_url');
         $this->smsSandbox = config('arkesel.sms_sandbox', false);
-        $this->builder = new MessageBuilder();
+        $this->builder = $builder ??  new ArkeselMessageBuilder();
+    }
+
+    /**
+     * return an array of the values in the `config/arkesel.php` file
+     *
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return config('arkesel');
     }
 
 
@@ -88,7 +99,7 @@ class Sms
      * @param  string  $schedule
      * @return $this
      */
-    public function schedule(string $schedule): self // TODO: Use carbon date format
+    public function schedule(string|Carbon $schedule): self
     {
         $this->builder->schedule($schedule);
 
@@ -118,7 +129,7 @@ class Sms
      * @param bool sandbox
      * @return $this
      */
-    public function sandbox(bool $sandbox): self
+    public function sandbox(bool $sandbox = true): self
     {
         $this->builder->sandbox($sandbox);
 
@@ -150,14 +161,14 @@ class Sms
                 'to' => $this->builder->getRecipients(apiVersion: $this->apiVersion),
                 'from' => $this->builder->getSender(),
                 'sms' => $this->builder->getMessage(),
-                'schedule' => $this->builder->getSchedule(),  // dd-mm-yyyy hh:mm AM/PM
+                'schedule' => $this->builder->getSchedule(),
             ])
             : array_filter([
                 'sender' => $this->builder->getSender(),
                 'recipients' => $this->builder->getRecipients(),
                 'message' => $this->builder->getMessage(),
                 'callback_url' => $this->builder->getCallbackUrl(),
-                'scheduled_date' => $this->builder->getSchedule(),  // 'Y-m-d H:i A' //E.g: "2021-03-17 07:00 AM"
+                'scheduled_date' => $this->builder->getSchedule(),
                 'sandbox' => $this->builder->getSandbox(),
             ]);
 
@@ -171,11 +182,17 @@ class Sms
 
         Log::info('SMS Client: ', ['response' => $response->json()]);
 
-        throw_if($response->failed(), ArkeselSmsException::handleResponse(response: $response));
+        throw_if($response->failed(), ArkeselSmsResponseException::handleResponse(response: $response));
 
         return $response;
     }
 
+    /**
+     * set the optional properties of the ArkeselMessageBuilder
+     * to use the default values specified in the `arkesel` config file
+     *
+     * @return void
+     */
     public function setMessageBuilderDefaults()
     {
         $this->builder->apiKey($this->builder->getApiKey() ?? $this->apiKey ?? '');

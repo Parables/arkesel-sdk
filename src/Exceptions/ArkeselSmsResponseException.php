@@ -10,7 +10,7 @@ namespace Parables\ArkeselSdk\Exceptions;
 
 use Illuminate\Http\Client\Response;
 
-class ArkeselSmsException extends \Exception
+class ArkeselSmsResponseException extends \Exception
 {
     /**
      * handle Sms response errors from Arkesel

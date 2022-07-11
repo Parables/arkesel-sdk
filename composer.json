@@ -36,8 +36,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
-        "test:coverage": "phpunit --coverage-text --coverage-clover=coverage.clover",
+        "test": "pest",
+        "test:coverage": "pest --coverage-text --coverage-clover=coverage.clover",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]
@@ -54,7 +54,8 @@
                 "Parables\\ArkeselSdk\\ArkeselServiceProvider"
             ],
             "alias": {
-                "Sms": "Parables\\ArkeselSdk\\Facades\\Sms"
+                "Sms": "Parables\\ArkeselSdk\\Facades\\ArkeselSms",
+                "ArkeselSms": "Parables\\ArkeselSdk\\Facades\\ArkeselSms"
             }
         }
     }

@@ -9,14 +9,14 @@
 namespace Parables\ArkeselSdk\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Parables\ArkeselSdk\BulkSms\Sms;
+use Parables\ArkeselSdk\BulkSms\ArkeselSms as Sms;
 
 /**
- * Sms Facade to send messages.
+ * ArkeselSms Facade to send messages.
  *
  * @method static \Psr\Http\Message\ResponseInterface send()
  */
-class SmsFacade extends Facade
+class ArkeselSms extends Facade
 {
     /**
      * Get the registered name of the component.

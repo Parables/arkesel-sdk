@@ -8,11 +8,12 @@
 
 namespace Parables\ArkeselSdk\BulkSms;
 
-use Exception;
+use Carbon\Exceptions\InvalidFormatException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use Parables\ArkeselSdk\Exceptions\MessageBuilderException;
+use Parables\ArkeselSdk\Exceptions\ArkeselMessageBuilderException;
 
-class MessageBuilder
+class ArkeselMessageBuilder
 {
     /**
      * the sms message.
@@ -40,12 +41,12 @@ class MessageBuilder
     /**
      * schedule when the sms should be sent.
      *
-     * @var null|string
+     * @var null|Carbon
      *
      * @see https://developers.arkesel.com/#operation/send_schedule_sms_v1
      * @see https://developers.arkesel.com/#operation/send_sms
      */
-    protected ?string $schedule = null;
+    protected ?Carbon $schedule = null;
 
     /**
      * A URL that will be called to notify you about the status of the sms to a particular number.
@@ -60,9 +61,9 @@ class MessageBuilder
      * if true, sms messages are not forwarded to the mobile network providers for delivery,
      *  hence you are not billed for the operation. Use this to test your application.
      *
-     * @var bool
+     * @var null|bool
      */
-    protected bool $sandbox = false;
+    protected ?bool $sandbox = null;
 
     /**
      * Arkesel SMS API Key.
@@ -81,7 +82,7 @@ class MessageBuilder
     {
         $message = trim($message);
 
-        throw_if(empty($message), MessageBuilderException::messageIsEmpty());
+        throw_if(empty($message), ArkeselMessageBuilderException::messageIsEmpty());
 
         $this->message = $message;
 
@@ -108,7 +109,7 @@ class MessageBuilder
     {
         $sender = trim($sender);
 
-        throw_if(empty($sender), MessageBuilderException::senderIsRequired());
+        throw_if(empty($sender), ArkeselMessageBuilderException::senderIsRequired());
 
         $this->sender = $sender;
 
@@ -137,9 +138,18 @@ class MessageBuilder
      */
     public function recipients(string|array $recipients): self
     {
-        $recipients = array_unique(array_filter(is_string($recipients) ? explode(',', $recipients) : $recipients));
+        $recipients = [
+            ...array_unique(
+                array_filter(
+                    is_string($recipients)
+                        ? explode(',', $recipients)
+                        : $recipients,
+                    fn ($recipient) => is_string($recipient) && !empty(trim($recipient))
+                )
+            )
+        ];
 
-        throw_if(empty($recipients), MessageBuilderException::noRecipients());
+        throw_if(empty($recipients), ArkeselMessageBuilderException::noRecipients());
 
         $this->recipients = $recipients;
 
@@ -163,16 +173,18 @@ class MessageBuilder
     /**
      *  set/schedule when the sms should be sent.
      *
-     * @var string
      *
      * @see https://developers.arkesel.com/#operation/send_schedule_sms_v1
      * @see https://developers.arkesel.com/#operation/send_sms
      *
-     * @param  string  $schedule
+     * @param  string|Carbon  $schedule
+     * @throws InvalidFormatException
      * @return $this
      */
-    public function schedule(string $schedule): self // TODO: change from string to carbon date and parse it into the correct format
+    public function schedule(string|Carbon $schedule): self
     {
+        $schedule = is_string($schedule) ? Carbon::parse($schedule) : $schedule;
+
         $this->schedule = $schedule;
 
         return $this;
@@ -180,12 +192,19 @@ class MessageBuilder
 
     /**
      * Get schedule when the sms should be sent.
-     *
+     * @param string $apiVersion
      * @return  null|string
      */
-    public function getSchedule(): null|string
+    public function getSchedule(string $apiVersion = 'v2'): null|string
     {
-        return $this->schedule;
+        if (!empty($this->schedule)) {
+            return $this->schedule->format(
+                $apiVersion === 'v1'
+                    ? 'd-m-Y h:i A'  //E.g: "13-01-2021 05:30 PM"
+                    : 'Y-m-d h:i A'  //E.g: "2021-03-17 07:00 AM"
+            );
+        }
+        return null;
     }
 
     /**
@@ -230,9 +249,9 @@ class MessageBuilder
     /**
      * Get the SMS environment mode
      *
-     * @return  bool
+     * @return  null|bool
      */
-    public function getSandbox(): bool
+    public function getSandbox(): null|bool
     {
         return $this->sandbox;
     }
@@ -248,7 +267,7 @@ class MessageBuilder
     {
         $apiKey = trim($apiKey);
 
-        throw_if(empty($apiKey), MessageBuilderException::apiKeyIsRequired());
+        throw_if(empty($apiKey), ArkeselMessageBuilderException::apiKeyIsRequired());
 
         $this->apiKey = $apiKey;
 
