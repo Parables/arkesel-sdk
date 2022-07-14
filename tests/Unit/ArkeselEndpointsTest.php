@@ -9,13 +9,11 @@
 use Parables\ArkeselSdk\Test\TestCase;
 use Parables\ArkeselSdk\Utils\ArkeselEndpoints;
 
-uses(TestCase::class, ArkeselEndpoints::class,);
-
-
+uses(TestCase::class, ArkeselEndpoints::class);
 
 // Tip: dataset values are spread to the closure in order
 test('arkesel endpoints using combined datasets: given a feature, it returns the endpoint URL', function ($baseServer, $apiVersion, $resource, $resourceEndpoint) {
-    expect($this->getEndpoint($baseServer, $resource, $apiVersion))->toEqual($baseServer . $resourceEndpoint);
+    expect($this->getEndpoint($baseServer, $resource, $apiVersion))->toEqual($baseServer.$resourceEndpoint);
 })->with([
     ['https://sms.arkesel.com', 'v1', 'send_sms', '/sms/api?action=send-sms'],
     ['https://sms.arkesel.com', 'v2', 'send_sms', '/api/v2/sms/send'],

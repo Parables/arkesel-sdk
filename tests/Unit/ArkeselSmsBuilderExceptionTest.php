@@ -14,9 +14,7 @@ use Parables\ArkeselSdk\Utils\ArkeselEndpoints;
 
 uses(TestCase::class, ArkeselEndpoints::class, ArkeselSmsBuilder::class);
 
-
 test('smsBuilderException:throws on empty message', function () {
-
     $builder = new ArkeselMessageBuilder();
 
     expect(fn () => $builder->message(''))->toThrow(ArkeselSmsBuilderException::class);
@@ -25,7 +23,6 @@ test('smsBuilderException:throws on empty message', function () {
 });
 
 test('smsBuilderException:throws api is required', function () {
-
     $builder = new ArkeselMessageBuilder();
 
     expect(fn () => $builder->smsApiKey(''))->toThrow(ArkeselSmsBuilderException::class);
@@ -34,7 +31,6 @@ test('smsBuilderException:throws api is required', function () {
 });
 
 test('smsBuilderException:throws no recipients for sms', function () {
-
     $builder = new ArkeselMessageBuilder();
 
     expect(fn () => $builder->recipients(''))->toThrow(ArkeselSmsBuilderException::class);
@@ -45,7 +41,6 @@ test('smsBuilderException:throws no recipients for sms', function () {
 });
 
 test('smsBuilderException:throws no sender should not exceed 11 characters', function () {
-
     $builder = new ArkeselMessageBuilder();
 
     expect(fn () => $builder->sender('My App Name is too long to be used as a sender id'))->toThrow(ArkeselSmsBuilderException::class);

@@ -30,7 +30,6 @@ test('receives config array', function () {
     ]);
 });
 
-
 test('arkeselSmsFacade: extends Facade', function () {
     expect((new ArkeselSmsFacade)->getFacadeRoot())->toBeInstanceOf(\Parables\ArkeselSdk\BulkSms\ArkeselSms::class);
 
@@ -38,7 +37,6 @@ test('arkeselSmsFacade: extends Facade', function () {
 
     expect(ArkeselSms::make())->toBeInstanceOf(ArkeselSms::class);
 });
-
 
 test('sendSms: v2 with instance', function () use ($recipients) {
     $response = (new ArkeselSms())

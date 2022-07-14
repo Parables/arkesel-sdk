@@ -26,8 +26,8 @@ class ArkeselChannel
      *
      * @param  mixed  $notifiable
      * @param  \Illuminate\Notifications\Notification  $notification
-     *
      * @return array
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsResponseOrException
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselNotificationChannelException
@@ -35,7 +35,7 @@ class ArkeselChannel
     public function send($notifiable, Notification $notification): array
     {
         throw_if(
-            !method_exists($notification, 'toArkesel'),
+            ! method_exists($notification, 'toArkesel'),
             ArkeselNotificationChannelException::methodDoesNotExist(notification: $notification),
         );
 
@@ -65,10 +65,10 @@ class ArkeselChannel
     }
 
     /**
-     * Attempts to get the recipients to be used for sending the notification using a chain of fallbacks
+     * Attempts to get the recipients to be used for sending the notification using a chain of fallbacks.
      *
-     * @param mixed $notifiable
-     * @param Notification $notification
+     * @param  mixed  $notifiable
+     * @param  Notification  $notification
      * @return string|array
      */
     public function getRecipients($notifiable, Notification $notification): string|array
@@ -80,10 +80,10 @@ class ArkeselChannel
     }
 
     /**
-     * Get the recipients from methods and properties defined on the `$notifiable` class
+     * Get the recipients from methods and properties defined on the `$notifiable` class.
      *
-     * @param mixed $notifiable
-     * @param Notification $notification
+     * @param  mixed  $notifiable
+     * @param  Notification  $notification
      * @return string|array
      */
     private function getRecipientsFromNotifiable($notifiable, Notification $notification): string|array
@@ -101,11 +101,11 @@ class ArkeselChannel
     /**
      * returns the value from a method or a property on the `notifiable` if it exists
      * using the plural name for the method first, then the property and repeating it
-     * for the singular name for the method, then the property
+     * for the singular name for the method, then the property.
      *
-     * @param string $name
-     * @param mixed $notifiable
-     * @param Notification $notification
+     * @param  string  $name
+     * @param  mixed  $notifiable
+     * @param  Notification  $notification
      * @return string|string[]|null
      */
     private function getValueFromMethodOrProperty(string $name, mixed $notifiable, Notification $notification): string|array|null
@@ -115,6 +115,7 @@ class ArkeselChannel
         } elseif (property_exists($notifiable, $name)) {
             return $notifiable->$name;
         }
+
         return null;
     }
 }

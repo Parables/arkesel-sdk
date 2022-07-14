@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 namespace Parables\ArkeselSdk\Utils;
 
 use Exception;
@@ -32,26 +38,25 @@ trait ArkeselEndpoints
     ];
 
     /**
-     * constructs the REST API endpoint URL to access the feature
+     * constructs the REST API endpoint URL to access the feature.
      *
-     * @param string $resource
-     * @param string|null $apiVersion
+     * @param  string  $resource
+     * @param  string|null  $apiVersion
      * @return string
      */
     public function getEndpoint(string $baseServer, string $resource, ?string $apiVersion)
     {
-        /**@var null|string|array */
+        /** @var null|string|array */
         $resourceEndpoint = Arr::get($this->endpoints, $resource);
 
-        throw_if(empty($resourceEndpoint), new Exception('No endpoints specified for the resource: ' . $resource));
+        throw_if(empty($resourceEndpoint), new Exception('No endpoints specified for the resource: '.$resource));
 
-        $path =  is_array($resourceEndpoint) && !empty($resourceEndpoint)
+        $path = is_array($resourceEndpoint) && ! empty($resourceEndpoint)
             ? Arr::get($resourceEndpoint, $apiVersion) ?? Arr::last($resourceEndpoint)
             : $resourceEndpoint;
 
+        throw_if(empty($path), new Exception('No endpoint specified for API version: '.$apiVersion.' for this resource: '.$resource));
 
-        throw_if(empty($path), new Exception('No endpoint specified for API version: ' . $apiVersion . ' for this resource: ' . $resource));
-
-        return $baseServer . $path;
+        return $baseServer.$path;
     }
 }

@@ -6,7 +6,6 @@
  *  @version 1.0.0
  */
 
-
 use Parables\ArkeselSdk\BulkSms\ArkeselSmsBuilder;
 use Parables\ArkeselSdk\Test\TestCase;
 use Parables\ArkeselSdk\Utils\ArkeselEndpoints;
@@ -20,8 +19,7 @@ $recipients = ['233203708218', '233203708218'];
 // exceptions
 test('arkeselSmsResponseOrException: Wrong action', function ($smsApiVersion) use ($recipients) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients($recipients)
             ->smsApiVersion($smsApiVersion)
@@ -35,8 +33,7 @@ test('arkeselSmsResponseOrException: Wrong action', function ($smsApiVersion) us
 
 test('arkeselSmsResponseOrException: Authentication Failed', function ($smsApiVersion) use ($recipients) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients($recipients)
             ->smsApiVersion($smsApiVersion)
@@ -51,8 +48,7 @@ test('arkeselSmsResponseOrException: Authentication Failed', function ($smsApiVe
 
 test('arkeselSmsResponseOrException: Invalid phone number', function ($smsApiVersion) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients('1234567890')
             ->smsApiVersion($smsApiVersion)
@@ -66,8 +62,7 @@ test('arkeselSmsResponseOrException: Invalid phone number', function ($smsApiVer
 
 test('arkeselSmsResponseOrException: Phone coverage not active', function ($smsApiVersion) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients('12992945528')
             ->smsApiVersion($smsApiVersion)
@@ -79,11 +74,9 @@ test('arkeselSmsResponseOrException: Phone coverage not active', function ($smsA
         yield 'v2';
     });
 
-
 test('arkeselSmsResponseOrException: Insufficient balance', function ($smsApiVersion) use ($recipients) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients($recipients)
             ->smsApiVersion($smsApiVersion)
@@ -96,8 +89,7 @@ test('arkeselSmsResponseOrException: Insufficient balance', function ($smsApiVer
 
 test('arkeselSmsResponseOrException: Invalid Sender ID', function ($smsApiVersion) use ($recipients) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients($recipients)
             ->sender('Arkesel')
@@ -112,8 +104,7 @@ test('arkeselSmsResponseOrException: Invalid Sender ID', function ($smsApiVersio
 
 test('arkeselSmsResponseOrException: Invalid Schedule Time', function () use ($recipients) {
     expect(
-        fn () =>
-        arkeselSms()
+        fn () => arkeselSms()
             ->message('Hello World')
             ->recipients($recipients)
             ->schedule('2022/40/15')

@@ -23,7 +23,6 @@ class ArkeselSms
 
     private ?string $invalidAction = null;
 
-
     public function __construct(?ArkeselMessageBuilder $builder = null)
     {
         $this->sender(config('arkesel.sms_sender'));
@@ -41,16 +40,16 @@ class ArkeselSms
                 ->smsApiVersion($builder->getSmsApiVersion() ?? config('arkesel.sms_api_version', 'v2'));
 
             // set if not empty
-            if (!empty(trim($builder->getMessage()))) {
+            if (! empty(trim($builder->getMessage()))) {
                 $this->message($builder->getMessage());
             }
 
             // set if not empty
-            if (!empty($builder->getRecipients())) {
+            if (! empty($builder->getRecipients())) {
                 $this->recipients($builder->getRecipients());
             }
             // set if not empty
-            if (!empty($builder->getSchedule())) {
+            if (! empty($builder->getSchedule())) {
                 $this->schedule($builder->getSchedule());
             }
         }
@@ -65,7 +64,7 @@ class ArkeselSms
      */
     public static function make(?ArkeselMessageBuilder $builder = null): self
     {
-        return (new ArkeselSms(builder: $builder));
+        return new ArkeselSms(builder: $builder);
     }
 
     /**
@@ -79,9 +78,9 @@ class ArkeselSms
     }
 
     /**
-     * Set the value of invalidAction
+     * Set the value of invalidAction.
      *
-     * @return  self
+     * @return self
      */
     public function setInvalidAction(string $invalidAction = null)
     {
@@ -94,6 +93,7 @@ class ArkeselSms
      * sends the sms to the recipients.
      *
      * @return array
+     *
      * @throws Exception
      */
     public function send(): array
@@ -139,9 +139,10 @@ class ArkeselSms
     }
 
     /**
-     * get the sms balance
+     * get the sms balance.
      *
      * @return array
+     *
      * @throws Exception
      */
     public function getSmsBalance(): array
@@ -177,6 +178,7 @@ class ArkeselSms
      * Ensures that the SMS API key is not null.
      *
      * @return self
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function ensureApiKeyIsSet(): self
@@ -196,6 +198,7 @@ class ArkeselSms
      * Ensures that the sms message is not null.
      *
      * @return self
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function ensureMessageIsSet(): self
@@ -209,6 +212,7 @@ class ArkeselSms
      * Ensures that the sms has at least one recipient.
      *
      * @return self
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function ensureRecipientsAreSet(): self
@@ -218,11 +222,11 @@ class ArkeselSms
         return $this;
     }
 
-
     /**
      * Ensures that the sms has a sender identifier that is less than 11 characters.
      *
      * @return self
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function ensureSenderIsSet(): self

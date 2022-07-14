@@ -18,10 +18,11 @@ class ArkeselSmsResponseOrException extends \Exception
      * handle Sms response errors from Arkesel.
      * Takes in a Illuminate\Http\Client\Response
      * and returns array
-     * or throws an Exception
+     * or throws an Exception.
      *
      * @param  \Illuminate\Http\Client\Response  $response
      * @return array
+     *
      * @throws Exception
      */
     public static function handleResponse(Response $response): array
@@ -31,10 +32,11 @@ class ArkeselSmsResponseOrException extends \Exception
 
     /**
      * determines if the response was successful and returns a JsonResponse.
-     * Otherwise throws an Exception
+     * Otherwise throws an Exception.
      *
-     * @param Response $response
+     * @param  Response  $response
      * @return array
+     *
      * @throws Exception
      */
     protected static function hasSuccessfulResponse(Response $response): array
@@ -42,11 +44,11 @@ class ArkeselSmsResponseOrException extends \Exception
         if ( // the response has any of these
             $response->json('status') === 'success' ||
             $response->json('code') === 'OK' ||
-            !is_null($response->json('balance')) ||
-            !is_null($response->json('user')) ||
-            !is_null($response->json('country')) ||
-            !is_null($response->json('sms_balance')) ||
-            !is_null($response->json('main_balance'))
+            ! is_null($response->json('balance')) ||
+            ! is_null($response->json('user')) ||
+            ! is_null($response->json('country')) ||
+            ! is_null($response->json('sms_balance')) ||
+            ! is_null($response->json('main_balance'))
         ) {
             return Arr::wrap($response->json());
         }
@@ -56,9 +58,9 @@ class ArkeselSmsResponseOrException extends \Exception
     }
 
     /**
-     * parses the response and returns the exception to be thrown with the appropriate message
+     * parses the response and returns the exception to be thrown with the appropriate message.
      *
-     * @param Response $response
+     * @param  Response  $response
      * @return Exception
      */
     protected static function hasExceptionResponse(Response $response): Exception

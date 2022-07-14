@@ -15,7 +15,7 @@ class ArkeselNotificationChannelException extends \Exception
     public static function methodDoesNotExist(Notification $notification)
     {
         return new static(
-            get_class() . '"toArkesel($notifiable)" method is not defined in ' . get_class($notification),
+            get_class().'"toArkesel($notifiable)" method is not defined in '.get_class($notification),
             400
         );
     }
@@ -24,8 +24,8 @@ class ArkeselNotificationChannelException extends \Exception
     {
         return new static(
             get_class()
-                . '"toArkesel($notifiable)" method in ' . get_class($notification)
-                . ' must return either a string or an instance of ArkeselMessage',
+                .'"toArkesel($notifiable)" method in '.get_class($notification)
+                .' must return either a string or an instance of ArkeselMessage',
             400
         );
     }

@@ -8,7 +8,6 @@
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Http;
 use Mockery\MockInterface;
 use Parables\ArkeselSdk\BulkSms\ArkeselChannel;
 use Parables\ArkeselSdk\BulkSms\ArkeselMessageBuilder;
@@ -35,10 +34,9 @@ test('notification: sent on using a string message', function () {
     $notification = new TestNotificationUsingStringMessage(message: 'Hello World');
     $notifiable = new TestNotifiable();
 
-    /**@var \Mockery\MockInterface|\Mockery\LegacyMockInterface $arkeselSmsMock*/
+    /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface $arkeselSmsMock */
     // $arkeselSmsMock = Mockery::mock(ArkeselSms::class);
     $arkeselSmsMock = $this->mock(ArkeselSms::class, function (MockInterface $mock) {
-
         $mock->shouldReceive('message')
             ->once()
             ->with('Hello World');
@@ -55,17 +53,16 @@ test('notification: sent on using a string message', function () {
             ->once()
             ->andReturn(
                 [
-                    "status" => "success",
-                    "data" => [
+                    'status' => 'success',
+                    'data' => [
                         [
-                            "recipient" => "233242158675",
-                            "id" => "9b752841-7ee7-4d40-b4fe-768bfb1da4f0"
+                            'recipient' => '233242158675',
+                            'id' => '9b752841-7ee7-4d40-b4fe-768bfb1da4f0',
                         ],
-                    ]
+                    ],
                 ]
             );
     });
-
 
     // binding mock to Laravel's service container
     // @see: https://laravel.com/docs/9.x/mocking#mocking-objects
@@ -73,7 +70,7 @@ test('notification: sent on using a string message', function () {
 
     expect($arkeselSmsMock)->toBeInstanceOf(ArkeselSms::class);
 
-    /**@var ArkeselSms $arkeselSmsMock */
+    /** @var ArkeselSms $arkeselSmsMock */
     $channel = new ArkeselChannel(arkeselSms: $arkeselSmsMock);
 
     // dispatch the notification to the Arkesel channel
@@ -84,7 +81,7 @@ test('notification: sent using an ArkeselMessageBuilder', function () {
     $notification = new TestNotificationUsingArkeselMessageBuilderWithMessage();
     $notifiable = new TestNotifiable();
 
-    /**@var \Mockery\MockInterface|\Mockery\LegacyMockInterface $arkeselSmsMock*/
+    /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface $arkeselSmsMock */
     $arkeselSmsMock = $this->mock(ArkeselSms::class, function (MockInterface $mock) {
 
         // $mock->shouldReceive('message')
@@ -127,7 +124,7 @@ test('notification: sent using an ArkeselMessageBuilder', function () {
 
     expect($arkeselSmsMock)->toBeInstanceOf(ArkeselSms::class);
 
-    /**@var ArkeselSms $arkeselSmsMock */
+    /** @var ArkeselSms $arkeselSmsMock */
     $channel = new ArkeselChannel(arkeselSms: $arkeselSmsMock);
 
     // dispatch the notification to the Arkesel channel
@@ -135,18 +132,18 @@ test('notification: sent using an ArkeselMessageBuilder', function () {
 });
 
 test('notification: order of preference to get recipients', function () {
-    $notifiables =   [
+    $notifiables = [
         'routeNotificationForArkesel()' => TestNotifiablePrefersRouteNotificationForArkeselMethod::class,
         'recipients()' => TestNotifiablePrefersRecipientsMethod::class,
-        "recipients" => TestNotifiablePrefersRecipientsProperty::class,
+        'recipients' => TestNotifiablePrefersRecipientsProperty::class,
         'recipient()' => TestNotifiablePrefersRecipientMethod::class,
-        "recipient" => TestNotifiablePrefersRecipientProperty::class,
+        'recipient' => TestNotifiablePrefersRecipientProperty::class,
         'phoneNumbers()' => TestNotifiablePrefersPhoneNumbersMethod::class,
-        "phoneNumbers" => TestNotifiablePrefersPhoneNumbersProperty::class,
-        "phone_numbers" => TestNotifiablePrefersSnakeCasedPhoneNumbersProperty::class,
+        'phoneNumbers' => TestNotifiablePrefersPhoneNumbersProperty::class,
+        'phone_numbers' => TestNotifiablePrefersSnakeCasedPhoneNumbersProperty::class,
         'phoneNumber()' => TestNotifiablePrefersPhoneNumberMethod::class,
-        "phoneNumber" => TestNotifiablePrefersPhoneNumberProperty::class,
-        "phone_number" => TestNotifiablePrefersSnakeCasedPhoneNumberProperty::class,
+        'phoneNumber' => TestNotifiablePrefersPhoneNumberProperty::class,
+        'phone_number' => TestNotifiablePrefersSnakeCasedPhoneNumberProperty::class,
     ];
 
     $notification = new TestNotificationUsingStringMessage(message: 'Hello World');
@@ -179,7 +176,6 @@ class TestNotificationUsingStringMessage extends Notification
     }
 }
 
-
 class TestNotificationUsingArkeselMessageBuilderWithMessage extends Notification
 {
     public function via($notifiable)
@@ -197,7 +193,6 @@ class TestNotificationUsingArkeselMessageBuilderWithMessage extends Notification
             ->callbackUrl('');
     }
 }
-
 
 class TestNotificationWithoutToArkeselMethod extends Notification
 {
@@ -217,7 +212,7 @@ class TestNotifiable
     }
 }
 
-#region order of preference to get recipients
+//region order of preference to get recipients
 class TestNotifiablePrefersRouteNotificationForArkeselMethod
 {
     use Notifiable;
@@ -235,7 +230,7 @@ class TestNotifiablePrefersRouteNotificationForArkeselMethod
     }
 
     /*3rd*/
-    public string $recipients = "recipients";
+    public string $recipients = 'recipients';
 
     /*4th*/
     public function recipient($notification)
@@ -244,7 +239,7 @@ class TestNotifiablePrefersRouteNotificationForArkeselMethod
     }
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = 'recipient';
 
     /*6th*/
     public function phoneNumbers($notification)
@@ -253,10 +248,10 @@ class TestNotifiablePrefersRouteNotificationForArkeselMethod
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -265,10 +260,10 @@ class TestNotifiablePrefersRouteNotificationForArkeselMethod
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersRecipientsMethod
@@ -282,7 +277,7 @@ class TestNotifiablePrefersRecipientsMethod
     }
 
     /*3rd*/
-    public string $recipients = "recipients";
+    public string $recipients = 'recipients';
 
     /*4th*/
     public function recipient($notification)
@@ -291,7 +286,7 @@ class TestNotifiablePrefersRecipientsMethod
     }
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = 'recipient';
 
     /*6th*/
     public function phoneNumbers($notification)
@@ -300,10 +295,10 @@ class TestNotifiablePrefersRecipientsMethod
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -312,10 +307,10 @@ class TestNotifiablePrefersRecipientsMethod
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersRecipientsProperty
@@ -323,7 +318,7 @@ class TestNotifiablePrefersRecipientsProperty
     use Notifiable;
 
     /*3rd*/
-    public string $recipients = "recipients";
+    public string $recipients = 'recipients';
 
     /*4th*/
     public function recipient($notification)
@@ -332,7 +327,7 @@ class TestNotifiablePrefersRecipientsProperty
     }
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = 'recipient';
 
     /*6th*/
     public function phoneNumbers($notification)
@@ -341,10 +336,10 @@ class TestNotifiablePrefersRecipientsProperty
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -353,10 +348,10 @@ class TestNotifiablePrefersRecipientsProperty
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersRecipientMethod
@@ -370,7 +365,7 @@ class TestNotifiablePrefersRecipientMethod
     }
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = 'recipient';
 
     /*6th*/
     public function phoneNumbers($notification)
@@ -379,10 +374,10 @@ class TestNotifiablePrefersRecipientMethod
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -391,10 +386,10 @@ class TestNotifiablePrefersRecipientMethod
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersRecipientProperty
@@ -402,7 +397,7 @@ class TestNotifiablePrefersRecipientProperty
     use Notifiable;
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = 'recipient';
 
     /*6th*/
     public function phoneNumbers($notification)
@@ -411,10 +406,10 @@ class TestNotifiablePrefersRecipientProperty
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -423,10 +418,10 @@ class TestNotifiablePrefersRecipientProperty
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersPhoneNumbersMethod
@@ -440,10 +435,10 @@ class TestNotifiablePrefersPhoneNumbersMethod
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -452,10 +447,10 @@ class TestNotifiablePrefersPhoneNumbersMethod
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersPhoneNumbersProperty
@@ -463,10 +458,10 @@ class TestNotifiablePrefersPhoneNumbersProperty
     use Notifiable;
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = 'phoneNumbers';
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -475,10 +470,10 @@ class TestNotifiablePrefersPhoneNumbersProperty
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersSnakeCasedPhoneNumbersProperty
@@ -486,7 +481,7 @@ class TestNotifiablePrefersSnakeCasedPhoneNumbersProperty
     use Notifiable;
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = 'phone_numbers';
 
     /*9th*/
     public function phoneNumber($notification)
@@ -495,10 +490,10 @@ class TestNotifiablePrefersSnakeCasedPhoneNumbersProperty
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersPhoneNumberMethod
@@ -512,10 +507,10 @@ class TestNotifiablePrefersPhoneNumberMethod
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersPhoneNumberProperty
@@ -523,10 +518,10 @@ class TestNotifiablePrefersPhoneNumberProperty
     use Notifiable;
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = 'phoneNumber';
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
 
 class TestNotifiablePrefersSnakeCasedPhoneNumberProperty
@@ -534,6 +529,6 @@ class TestNotifiablePrefersSnakeCasedPhoneNumberProperty
     use Notifiable;
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = 'phone_number';
 }
-#endregion
+//endregion

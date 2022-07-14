@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * @author Parables Boltnoel <parables95@gmail.com>
+ * @package arkesel-sdk
+ *  @version 1.0.0
+ */
+
 namespace Parables\ArkeselSdk\BulkSms;
 
 use Exception;
@@ -77,6 +83,7 @@ trait ArkeselSmsBuilder
      *
      * @param  string  $message
      * @return $this
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function message(string $message): self
@@ -105,6 +112,7 @@ trait ArkeselSmsBuilder
      *
      * @param  string  $sender
      * @return $this
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function sender(string $sender): self
@@ -139,6 +147,7 @@ trait ArkeselSmsBuilder
      *
      * @param  string|array  $recipients
      * @return $this
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function recipients(string|array $recipients): self
@@ -147,7 +156,7 @@ trait ArkeselSmsBuilder
             ...array_unique(
                 array_filter(array_map(
                     function ($recipient) {
-                        if (is_string($recipient) && !empty($recipient = trim($recipient))) {
+                        if (is_string($recipient) && ! empty($recipient = trim($recipient))) {
                             return $recipient;
                         }
                     },
@@ -169,7 +178,8 @@ trait ArkeselSmsBuilder
 
     /**
      * Get phone numbers to which to send sms to.
-     * @param null|string $smsApiVersion
+     *
+     * @param  null|string  $smsApiVersion
      * @return null|string|array
      */
     public function getRecipients(string $smsApiVersion = null): null|string|array
@@ -179,7 +189,7 @@ trait ArkeselSmsBuilder
         }
         $smsApiVersion = $smsApiVersion ?? $this->getSmsApiVersion();
 
-        return $smsApiVersion  === 'v1'
+        return $smsApiVersion === 'v1'
             ? implode(',', $this->recipients)
             : $this->recipients;
     }
@@ -215,9 +225,9 @@ trait ArkeselSmsBuilder
     {
         $smsApiVersion = $smsApiVersion ?? $this->getSmsApiVersion();
 
-        if (!empty($this->schedule)) {
+        if (! empty($this->schedule)) {
             return $this->schedule->format(
-                $smsApiVersion  === 'v1'
+                $smsApiVersion === 'v1'
                     ? 'd-m-Y h:i A'  //E.g: "13-01-2021 05:30 PM"
                     : 'Y-m-d h:i A'  //E.g: "2021-03-17 07:00 AM"
             );
@@ -233,6 +243,7 @@ trait ArkeselSmsBuilder
      * but you prefer to send sms without the default callbackUrl, passing an empty
      * string to the callbackUrl will set a null value while a passing a null
      * value will fallback to the default callbackUrl is specified in the config
+     *
      * @param  string  $callbackUrl
      *
      * @see developershttps://developers.arkesel.com/#operation/send_sms
@@ -248,6 +259,7 @@ trait ArkeselSmsBuilder
         } else {
             $this->callbackUrl = $callbackUrl;
         }
+
         return $this;
     }
 
@@ -285,12 +297,13 @@ trait ArkeselSmsBuilder
     }
 
     /**
-     * sets the SMS API Key to used to authenticate the request
+     * sets the SMS API Key to used to authenticate the request.
      *
      * Overrides the `ARKESEL_SMS_API_KEY` set in the `.env` file.
      *
      * @param  string  $smsApiKey
      * @return $this
+     *
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
      */
     public function smsApiKey(string $smsApiKey): self
@@ -315,7 +328,7 @@ trait ArkeselSmsBuilder
     }
 
     /**
-     * sets the SMS API Version to use for this request
+     * sets the SMS API Version to use for this request.
      *
      * Overrides the `ARKESEL_SMS_API_VERSION` set in the `.env` file.
      *
@@ -326,7 +339,7 @@ trait ArkeselSmsBuilder
     {
         $validVersions = ['v1', 'v2'];
 
-        throw_if(!in_array($smsApiVersion, $validVersions), new Exception('SMS API version is not valid'));
+        throw_if(! in_array($smsApiVersion, $validVersions), new Exception('SMS API version is not valid'));
 
         $this->smsApiVersion = $smsApiVersion;
 
