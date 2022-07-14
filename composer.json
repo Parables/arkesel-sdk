@@ -20,6 +20,8 @@
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "^7.6",
         "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-mock": "^1.0",
+        "pestphp/pest-plugin-parallel": "^1.2",
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {
@@ -37,7 +39,7 @@
     },
     "scripts": {
         "test": "pest",
-        "test:coverage": "XDEBUG_MODE=coverage pest --coverage --coverage-clover build/clover.xml"
+        "test:coverage": "XDEBUG_MODE=coverage pest --parallel --coverage --coverage-clover build/clover.xml"
     },
     "config": {
         "sort-packages": true,

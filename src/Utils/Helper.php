@@ -9,13 +9,13 @@
 use Parables\ArkeselSdk\BulkSms\ArkeselMessageBuilder;
 use Parables\ArkeselSdk\BulkSms\ArkeselSms;
 
-if (! function_exists('arkeselSms')) {
+if (!function_exists('arkeselSms')) {
     /**
      * Access the ArkeselSms class through helper.
      *
      * @return ArkeselSms
      */
-    function arkeselSms(ArkeselMessageBuilder $builder = null)
+    function arkeselSms(?ArkeselMessageBuilder $builder = null)
     {
         return app(ArkeselSms::class, ['builder' => $builder]);
     }
