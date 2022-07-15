@@ -1,3 +1,5 @@
 {
-    "conventionalCommits.scopes": ["Bulk SMS"]
+    "conventionalCommits.scopes": ["Bulk SMS"],
+    "php.version": "8.1.7",
+    "cSpell.words": ["Boltnoel"]
 }

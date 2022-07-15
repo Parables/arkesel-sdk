@@ -15,8 +15,7 @@ class ArkeselNotificationChannelException extends \Exception
     public static function methodDoesNotExist(Notification $notification)
     {
         return new static(
-            get_class()
-                .'"toArkesel($notifiable)" method is not defined in '.get_class($notification),
+            get_class().'"toArkesel($notifiable)" method is not defined in '.get_class($notification),
             400
         );
     }
