@@ -15,7 +15,7 @@ if (! function_exists('arkeselSms')) {
      *
      * @return ArkeselSms
      */
-    function arkeselSms(?ArkeselMessageBuilder $builder = null)
+    function arkeselSms(ArkeselMessageBuilder $builder = null)
     {
         return app(ArkeselSms::class, ['builder' => $builder]);
     }

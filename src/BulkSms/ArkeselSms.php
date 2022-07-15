@@ -23,7 +23,7 @@ class ArkeselSms
 
     private ?string $invalidAction = null;
 
-    public function __construct(?ArkeselMessageBuilder $builder = null)
+    public function __construct(ArkeselMessageBuilder $builder = null)
     {
         $this->sender(config('arkesel.sms_sender'));
         $this->callbackUrl(config('arkesel.sms_callback_url'));
@@ -40,16 +40,16 @@ class ArkeselSms
                 ->smsApiVersion($builder->getSmsApiVersion() ?? config('arkesel.sms_api_version', 'v2'));
 
             // set if not empty
-            if (! empty(trim($builder->getMessage()))) {
+            if (!empty(trim($builder->getMessage()))) {
                 $this->message($builder->getMessage());
             }
 
             // set if not empty
-            if (! empty($builder->getRecipients())) {
+            if (!empty($builder->getRecipients())) {
                 $this->recipients($builder->getRecipients());
             }
             // set if not empty
-            if (! empty($builder->getSchedule())) {
+            if (!empty($builder->getSchedule())) {
                 $this->schedule($builder->getSchedule());
             }
         }
@@ -62,7 +62,7 @@ class ArkeselSms
      *
      * @return $this
      */
-    public static function make(?ArkeselMessageBuilder $builder = null): self
+    public static function make(ArkeselMessageBuilder $builder = null): self
     {
         return new ArkeselSms(builder: $builder);
     }

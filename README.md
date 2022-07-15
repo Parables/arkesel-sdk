@@ -27,7 +27,7 @@
       - [ArkeselSmsBuilder Trait (used by both ArkeselSms and ArkeselMessageBuilder)](#arkeselsmsbuilder-trait-used-by-both-arkeselsms-and-arkeselmessagebuilder)
       - [ArkeselSms](#arkeselsms)
   - [FAQ](#faq)
-    - [ArkeselChannel](#arkeselchannel)
+      - [ArkeselChannel](#arkeselchannel)
   - [Changelog](#changelog)
   - [Testing](#testing)
   - [Security](#security)
@@ -341,53 +341,55 @@ class GetRecipientsOrderOfPreference
     /*1st*/
     public function routeNotificationForArkesel($notification)
     {
-        return 'routeNotificationForArkesel()';
+        return ['233123456789','233123456789']
     }
 
     /*2nd*/
     public function recipients($notification)
     {
-        return 'recipients()';
+        return ['233123456789','233123456789']
     }
 
     /*3rd*/
-    public string $recipients = "recipients";
+    public string $recipients = ['233123456789','233123456789'];
 
     /*4th*/
     public function recipient($notification)
     {
-        return 'recipient';
+        return ['233123456789','233123456789']
     }
 
     /*5th*/
-    public string $recipient = "recipient";
+    public string $recipient = ['233123456789','233123456789'];
 
     /*6th*/
     public function phoneNumbers($notification)
     {
-        return 'phoneNumbers()';
+        return ['233123456789','233123456789']
     }
 
     /*7th*/
-    public string $phoneNumbers = "phoneNumbers";
+    public string $phoneNumbers = ['233123456789','233123456789'];
 
     /*8th*/
-    public string $phone_numbers = "phone_numbers";
+    public string $phone_numbers = ['233123456789','233123456789'];
 
     /*9th*/
     public function phoneNumber($notification)
     {
-        return 'phoneNumber()';
+        return ['233123456789','233123456789']
     }
 
     /*10th*/
-    public string $phoneNumber = "phoneNumber";
+    public string $phoneNumber = ['233123456789','233123456789'];
 
     /*11th*/
-    public string $phone_number = "phone_number";
+    public string $phone_number = ['233123456789','233123456789'];
 }
 ```
 
+> Notice that all the methods above receives the Notification instance `$notification` being sent.
+>
 > If there is none of these methods or properties is defined, it will throw an exception: `ArkeselSmsBuilderException: 'No recipients were specified for this sms'`
 
 ### Composing SMS
@@ -532,7 +534,9 @@ new ArkeselSms($builder = null)
 
 - `make(?ArkeselMessageBuilder $builder): self`
 
-    proxy to the __constructor to be used as a Facade
+    proxy to the __constructor.
+
+    Must be called first when using the ArkeselSms as a facade
 
 - `getConfig(): array`
 

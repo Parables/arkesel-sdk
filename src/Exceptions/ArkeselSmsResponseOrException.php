@@ -85,7 +85,6 @@ class ArkeselSmsResponseOrException extends \Exception
                 break;
 
             default:
-                dump($response->body());
                 break;
         }
     }
