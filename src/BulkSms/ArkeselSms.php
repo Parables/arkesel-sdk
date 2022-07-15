@@ -23,7 +23,7 @@ class ArkeselSms
 
     private ?string $invalidAction = null;
 
-    public function __construct(?ArkeselMessageBuilder $builder = null)
+    public function __construct(ArkeselMessageBuilder $builder = null)
     {
         $this->sender(config('arkesel.sms_sender'));
         $this->callbackUrl(config('arkesel.sms_callback_url'));
@@ -62,7 +62,7 @@ class ArkeselSms
      *
      * @return $this
      */
-    public static function make(?ArkeselMessageBuilder $builder = null): self
+    public static function make(ArkeselMessageBuilder $builder = null): self
     {
         return new ArkeselSms(builder: $builder);
     }
