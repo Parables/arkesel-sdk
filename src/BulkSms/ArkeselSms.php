@@ -40,16 +40,16 @@ class ArkeselSms
                 ->smsApiVersion($builder->getSmsApiVersion() ?? config('arkesel.sms_api_version', 'v2'));
 
             // set if not empty
-            if (!empty(trim($builder->getMessage()))) {
+            if (! empty(trim($builder->getMessage()))) {
                 $this->message($builder->getMessage());
             }
 
             // set if not empty
-            if (!empty($builder->getRecipients())) {
+            if (! empty($builder->getRecipients())) {
                 $this->recipients($builder->getRecipients());
             }
             // set if not empty
-            if (!empty($builder->getSchedule())) {
+            if (! empty($builder->getSchedule())) {
                 $this->schedule($builder->getSchedule());
             }
         }
