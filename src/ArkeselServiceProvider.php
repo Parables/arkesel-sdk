@@ -21,7 +21,7 @@ class ArkeselServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/arkesel.php', 'arkesel');
+        $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
 
         Notification::resolved(function (ChannelManager $service) {
             $service->extend('arkesel', function ($app) {
@@ -37,7 +37,7 @@ class ArkeselServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
+                __DIR__.'/../config/arkesel.php' => $this->app->configPath('arkesel.php'),
             ], 'arkesel');
         }
     }
