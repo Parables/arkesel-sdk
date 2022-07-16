@@ -12,6 +12,7 @@ use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 use Parables\ArkeselSdk\BulkSms\ArkeselChannel;
+use Parables\ArkeselSdk\BulkSms\ArkeselSms;
 
 class ArkeselServiceProvider extends ServiceProvider
 {
@@ -23,8 +24,8 @@ class ArkeselServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/arkesel.php', 'arkesel');
 
         Notification::resolved(function (ChannelManager $service) {
-            $service->extend('arkesel', function () {
-                return new ArkeselChannel();
+            $service->extend('arkesel', function ($app) {
+                return new ArkeselChannel($app->make(ArkeselSms::class));
             });
         });
     }
