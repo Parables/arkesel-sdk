@@ -79,8 +79,7 @@ The following env variables can be used to customize the package.
 Refer to the [Arkesel Docs](https://developers.arkesel.com/) for more info
 
 ```env
-ARKESEL_API_VERSION="v2" # or "v1"
-ARKESEL_SMS_URL= # for SMS API v1, use 'https://sms.arkesel.com/sms/api`
+ARKESEL_SMS_API_VERSION="v2" # or "v1"
 ARKESEL_SMS_SENDER= # defaults to your `APP_NAME` env variable
 ARKESEL_SMS_CALLBACK_URL= # for API SMS v2
 ARKESEL_SMS_SANDBOX= # for API SMS v2
