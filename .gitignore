@@ -5,4 +5,4 @@ composer.phar
 .phpunit.result.cache
 /.history
 phpcs.xml
-myreport/
+phpmetrics/

@@ -13,10 +13,10 @@ excludes: # regex of files (or directory) to exclude from analyze
 #     - php
 #     - php8
 report: # list of reports to generate
-    html: "myreport"
-    csv: "myreport/report.csv"
-    json: "myreport/report.json"
-    violations: "myreport/violations.xml"
+    html: "phpmetrics"
+    csv: "phpmetrics/report.csv"
+    json: "phpmetrics/report.json"
+    violations: "phpmetrics/violations.xml"
 
 # "layers" of code. You can group your classes and packages by regex,
 # to visualise specific HTML report for each of them
