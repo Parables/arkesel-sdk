@@ -358,7 +358,7 @@ class GetRecipientsOrderOfPreference
 
 ### Composing SMS
 
-You can fluently compose the SMS by chaining the setter methods exposed by the `ArkeselSmsBuilder` trait used by both `ArkeselMessageBuilder` and `ArkeselSms` classes;
+You can fluently compose the SMS by chaining the setter methods exposed by the `ArkeselMessageBuilder`;
 
 ```php
 public function toArkesel($notifiable)
