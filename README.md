@@ -11,29 +11,28 @@
 
 ## Contents
 
-- [Arkesel SDK](#arkesel-sdk)
-  - [Contents](#contents)
-  - [About](#about)
-  - [Features](#features)
-  - [Installation](#installation)
-    - [Setting up the Arkesel service](#setting-up-the-arkesel-service)
-  - [Usage](#usage)
-    - [Bulk SMS](#bulk-sms)
-      - [Using the `ArkeselSms` instance, facade or helper function](#using-the-arkeselsms-instance-facade-or-helper-function)
-      - [Notifications to the `arkesel` channel](#notifications-to-the-arkesel-channel)
-      - [SMS Recipients](#sms-recipients)
-    - [Composing SMS](#composing-sms)
-    - [Available methods](#available-methods)
-      - [ArkeselSmsBuilder Trait (used by both ArkeselSms and ArkeselMessageBuilder)](#arkeselsmsbuilder-trait-used-by-both-arkeselsms-and-arkeselmessagebuilder)
-      - [ArkeselSms](#arkeselsms)
-  - [FAQ](#faq)
-      - [ArkeselChannel](#arkeselchannel)
-  - [Changelog](#changelog)
-  - [Testing](#testing)
-  - [Security](#security)
-  - [Contributing](#contributing)
-  - [Credits](#credits)
-  - [License](#license)
+-   [Arkesel SDK](#arkesel-sdk)
+    -   [Contents](#contents)
+    -   [About](#about)
+    -   [Features](#features)
+    -   [Installation](#installation)
+        -   [Setting up the Arkesel service](#setting-up-the-arkesel-service)
+    -   [Usage](#usage)
+        -   [Bulk SMS](#bulk-sms)
+            -   [Notifications to the `arkesel` channel](#notifications-to-the-arkesel-channel)
+            -   [SMS Recipients](#sms-recipients)
+        -   [Composing SMS](#composing-sms)
+        -   [Available methods](#available-methods)
+            -   [ArkeselMessageBuilder)](#arkeselmessagebuilder)
+            -   [ArkeselSms](#arkeselsms)
+    -   [FAQ](#faq)
+        -   [ArkeselChannel](#arkeselchannel)
+    -   [Changelog](#changelog)
+    -   [Testing](#testing)
+    -   [Security](#security)
+    -   [Contributing](#contributing)
+    -   [Credits](#credits)
+    -   [License](#license)
 
 ## About
 
@@ -41,11 +40,11 @@ This is an unofficial SDK for [Arkesel](https://arkesel.com/) which is a wrapper
 
 ## Features
 
-- [x] Bulk SMS
-- [ ] Payment
-- [ ] Voice
-- [ ] Email
-- [ ] USSD
+-   [x] Bulk SMS
+-   [ ] Payment
+-   [ ] Voice
+-   [ ] Email
+-   [ ] USSD
 
 This SDK includes a Laravel Notification channel that makes it possible to send out Laravel notifications as a SMS using [Arkesel API](https://arkesel.com/)
 
@@ -79,7 +78,8 @@ The following env variables can be used to customize the package.
 Refer to the [Arkesel Docs](https://developers.arkesel.com/) for more info
 
 ```env
-ARKESEL_SMS_API_VERSION="v2" # or "v1"
+ARKESEL_API_VERSION="v2" # or "v1"
+ARKESEL_SMS_URL= # for SMS API v1, use 'https://sms.arkesel.com/sms/api`
 ARKESEL_SMS_SENDER= # defaults to your `APP_NAME` env variable
 ARKESEL_SMS_CALLBACK_URL= # for API SMS v2
 ARKESEL_SMS_SANDBOX= # for API SMS v2
@@ -89,48 +89,13 @@ ARKESEL_SMS_SANDBOX= # for API SMS v2
 
 ### Bulk SMS
 
-#### Using the `ArkeselSms` instance, facade or helper function
-
 ```php
-
-/** @var array $response */
-// helper function
-$response = arkeselSms()
+$builder = (new ArkeselMessageBuilder)
     ->message('Hello World')
     ->recipients(["233234567890", "233234567890"])
     ->recipients("233234567890,233234567890") // alternative
-    ->sandbox()
-    ->send();
-
-
-// facade
-$response = ArkeselSms::make()
-    ->message('Hello World')
-    ->recipients(["233234567890", "233234567890"])
-    ->recipients("233234567890,233234567890") // alternative
-    ->sandbox()
-    ->send();
-
-// instance
-$response = new ArkeselSms()
-    ->message('Hello World')
-    ->recipients(["233234567890", "233234567890"])
-    ->recipients("233234567890,233234567890") // alternative
-    ->sandbox()
-    ->send();
-```
-
-Using a ArkeselMessageBuilder instance
-
-```php
-$builder = new ArkeselMessageBuilder();
-
-$builder
-    ->message('Hello World')
-    ->recipients(["233234567890", "233234567890"])
     ->sandbox(false);
 
-/** @var array $response */
 // helper function
 $response = arkeselSms(builder: $builder)->send();
 
@@ -222,7 +187,7 @@ Create a notification class. Refer to Laravel's documentation on [Notifications]
 
 3. Send the notification
 
-- Option 1: using the `notify()` method that is provided by the `Notifiable` trait
+-   Option 1: using the `notify()` method that is provided by the `Notifiable` trait
 
     ```php
     use App\Notifications\WelcomeMessage;
@@ -230,7 +195,7 @@ Create a notification class. Refer to Laravel's documentation on [Notifications]
     $user->notify(new WelcomeMessage($message));
     ```
 
-- Option 2: using the Notification Facade
+-   Option 2: using the Notification Facade
 
     ```php
     use Illuminate\Support\Facades\Notification;
@@ -238,7 +203,7 @@ Create a notification class. Refer to Laravel's documentation on [Notifications]
     Notification::send($users, new WelcomeMessage($message));
     ```
 
-- Option 3: On demand notification using the Notification's facade `route` method
+-   Option 3: On demand notification using the Notification's facade `route` method
 
     ```php
     Notification::route('arkesel', '233123456789')->notify(new WelcomeMessage($message));
@@ -248,11 +213,11 @@ Create a notification class. Refer to Laravel's documentation on [Notifications]
 
 For on-demand notifications, `recipients` are directly passed to the `Notification::route` method.
 
- ```php
- Notification::route('arkesel', ['233123456789', '233123456789'])->notify(new WelcomeMessage($message));
+```php
+Notification::route('arkesel', ['233123456789', '233123456789'])->notify(new WelcomeMessage($message));
 
 // alternative
- Notification::route('arkesel', '233123456789,233123456789')->notify(new WelcomeMessage($message));
+Notification::route('arkesel', '233123456789,233123456789')->notify(new WelcomeMessage($message));
 ```
 
 For all other cases, it is **highly recommend** to be explicit about specifying the recipients of your notification using the `recipients()` method on the `ArkeselMessageBuilder` instance or `ArkeselSms` instance/facade/helper function
@@ -276,9 +241,9 @@ public function toArkesel($notifiable)
 }
 ```
 
->In such cases, please make sure to define a `routeNotificationForArkesel($notification)` method which will receive the Notification instance `$notification` being sent on your notifiable class and return a comma-separated string or an array of string of phone numbers.
+> In such cases, please make sure to define a `routeNotificationForArkesel($notification)` method which will receive the Notification instance `$notification` being sent on your notifiable class and return a comma-separated string or an array of string of phone numbers.
 >
->This ensures that the package doesn't attempt to figure out the recipients.
+> This ensures that the package doesn't attempt to figure out the recipients.
 
 ```php
 public function routeNotificationForArkesel($notification)
@@ -412,183 +377,133 @@ public function toArkesel($notifiable)
 
 ### Available methods
 
-#### ArkeselSmsBuilder Trait (used by both ArkeselSms and ArkeselMessageBuilder)
+#### ArkeselMessageBuilder
 
-- `message(string $message): self`
+-   `message(string $message): self`
 
     set the message to be sent.
 
-- `getMessage(): string`
+-   `getMessage(): string`
 
-     get the sms message to be sent
+    get the sms message to be sent
 
-- `sender(string $sender): self`
+-   `sender(string $sender): self`
 
-     set the name or number that identifies the sender of an SMS message.
+    set the name or number that identifies the sender of an SMS message.
 
-- `getSender(): null|string`
+-   `getSender(): null|string`
 
-     get the name or number that identifies the sender of the SMS message.
+    get the name or number that identifies the sender of the SMS message.
 
-- `recipients(string|array $recipients):self`
+-   `recipients(string|array $recipients):self`
 
-     set the phone numbers to receive the sms.
+    set the phone numbers to receive the sms.
 
-     This method will trim empty strings and filter out unique recipients
+    This method will trim empty strings and filter out unique recipients
 
-- `getRecipients(string $apiVersion = 'v2'): string|array`
+-   `getRecipients(string $apiVersion = 'v2'): string|array`
 
-     get the phone numbers to receive the sms.
+    get the phone numbers to receive the sms.
 
-     returns a comma-separated string for SMS API version `v1` and array of strings for `v2`
+    returns a comma-separated string for SMS API version `v1` and array of strings for `v2`
 
-- `schedule(string|Carbon $schedule): self`
+-   `schedule(string|Carbon $schedule): self`
 
-     set/schedule when the message should be sent.
+    set/schedule when the message should be sent.
 
-     refer <https://carbon.nesbot.com/docs/> for more information
+    refer <https://carbon.nesbot.com/docs/> for more information
 
-     ```php
-     $builder = new ArkeselMessageBuilder();
-     
-     $builder->schedule($now->addMinutes(5));
+    ```php
+    $builder = new ArkeselMessageBuilder();
 
-     $builder->schedule('first day of May 2022');
-     ```
+    $builder->schedule($now->addMinutes(5));
 
-- `getSchedule(string $apiVersion = 'v2'): null|string`
+    $builder->schedule('first day of May 2022');
+    ```
 
-     get when the message should be sent for the SMS API version specified.
+-   `getSchedule(string $apiVersion = 'v2'): null|string`
 
-- `callbackUrl(string $callbackUrl): self`
+    get when the message should be sent for the SMS API version specified.
 
-     set a URL that will be called to notify you about the status of the message to a particular number.
+-   `callbackUrl(string $callbackUrl): self`
 
-     In cases where a default callbackUrl is specified in the config
-      but you prefer to send sms without using the default callbackUrl, passing an empty
-      string to the `callbackUrl('')` will set a null value while a passing a null
-      value will fallback to the default callbackUrl is specified in the config
+    set a URL that will be called to notify you about the status of the message to a particular number.
 
-- `getCallbackUrl(): null|string`
+-   `getCallbackUrl(): null|string`
 
-     set a URL that will be called to notify you about the status of the message to a particular number.
+    set a URL that will be called to notify you about the status of the message to a particular number.
 
-- `sandbox(bool $sandbox = true): self`
+-   `sandbox(bool $sandbox = true): self`
 
-     set the environment for sending sms.
+    set the environment for sending sms.
     if true, sms messages are not forwarded to the mobile network providers for delivery hence you are not billed for the operation. Use this to test your application.
 
-- `getSandbox()`
+-   `getSandbox()`
 
-     Get the SMS environment mode
+    Get the SMS environment mode
 
-- `smsApiKey(string $apiKey): self`
+-   `smsApiKey(string $apiKey): self`
 
     sets the API key to used to authenticate the request.
 
     Overrides the API key set in the `.env` file.
 
-- `getSmsApiKey(): null|string`
+-   `getSmsApiKey(): null|string`
 
-     get arkesel SMS API Key to use for this request.
+    get arkesel SMS API Key to use for this request.
 
-- `smsApiVersion(string $smsApiVersion = 'v2'): self`
+-   `smsApiVersion(string $smsApiVersion = 'v2'): self`
 
     sets the SMS API Version to use for this request
 
-     Overrides the `ARKESEL_SMS_API_VERSION` set in the `.env` file.
+    Overrides the `ARKESEL_SMS_API_VERSION` set in the `.env` file.
 
-- `getSmsApiVersion(): null|string`
+-   `getSmsApiVersion(): null|string`
 
     Get arkesel SMS API version to use for this request.
 
 #### ArkeselSms
 
-The `ArkeselSms` class exposes additional methods:
+The `ArkeselSms` class it used to send the SMS and get the SMS balance.
 
 ```php
-// send sms
-new ArkeselSms($builder = null)
-    ->make($builder = null)
-    ->getConfig()
-    ->message("Hello World")
-    ->sender("My App") // less than 11 characters
-    ->recipients(["233123456789", "233123456789"])
-    ->recipients("233123456789,233123456789") // alternative
-    ->schedule(now()->addMinutes(5))
-    ->callbackUrl("https://my-sms-callback-url")
-    ->sandbox(false)
-    ->apiKey("your API key") # this overrides the `.env` variable
-    ->ensureMessageIsSet()
-    ->ensureSenderIsSet()
-    ->ensureRecipientsAreSet()
-    ->ensureHasCallbackUrl()
-    ->send();
-
-// get the sms balance
-  arkeselSms()
-    ->smsApiVersion(smsApiVersion: 'v1')
-    ->getSmsBalance();
+// Create an instance
+(new ArkeselSms(builder: $builder))->send();
+// OR: Use the Facade
+ArkeselSms::make(builder: $builder)->send();
+// OR: Use the helper function
+arkeselSms(builder: $builder)->send();
 ```
 
-- `make(?ArkeselMessageBuilder $builder): self`
-
-    proxy to the __constructor.
+-   `make(ArkeselMessageBuilder $builder): self`
 
     Must be called first when using the ArkeselSms as a facade
 
-- `getConfig(): array`
-
-    return an array of the values received from the `config/arkesel.php` file
-
-- `send(): array`
+-   `send(): array`
 
     sends the sms to the recipients
 
-- `getSmsBalance(): array`
+-   `static getSmsBalance(string $smsApiVersion = null, string $smsApiKey = null): array`
 
     get the sms balance
-- `ensureApiKeyIsSet(): self`
 
-    Ensures that the SMS API key is not null.
-
-- `ensureMessageIsSet(): self`
-
-    Ensures that the sms message is not null.
-
-- `ensureRecipientsAreSet(): self`
-
-     Ensures that the sms has at least one recipient.
-
-- `ensureSenderIsSet(): self`
-
-    Ensures that the sms has a sender identifier that is less than 11 characters.
-
-- `ensureHasCallbackUrl(): self`
-
-    Ensures that a callbackUrl is ignored is an empty string is set, a null value will default to the value set in the `arkesel` config
+```php
+Arkesel::getSmsBalance();
+```
 
 ## FAQ
 
-- Send SMS without using the callbackUrl specified in the config?
-
-    The `callbackUrl(string $callbackUrl): self` accepts a string. Pass an empty string  to the `callbackUrl('')` method to set it to null.
-
-- Send SMS in sandbox mode
+-   Send SMS in sandbox mode
 
     By default, the SDK sends SMS with the sandbox mode is set to `false`. You have to be explicit if you prefer to send sms in sandbox mode by calling the `sandbox()` or `sandbox(true)` setter method
 
 #### ArkeselChannel
 
-The `ArkeselChannel` class exposes 2 methods to send notifications and get the recipients
+The `ArkeselChannel` class exposes the send methods to send notifications.
 
-- `send($notifiable, Notification $notification): array`
+-   `send($notifiable, Notification $notification): array`
 
-     Sends the given notification through ArkeselSms.
-
-- `getRecipients($notifiable, Notification $notification): string|array`
-
-     Attempts to get the recipients to be used for sending the notification using a chain of fallbacks
+    Sends the given notification through ArkeselSms.
 
 ## Changelog
 
@@ -612,8 +527,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [Parables Boltnoel](https://github.com/parables)
-- [All Contributors](../../contributors)
+-   [Parables Boltnoel](https://github.com/parables)
+-   [All Contributors](../../contributors)
 
 ## License
 

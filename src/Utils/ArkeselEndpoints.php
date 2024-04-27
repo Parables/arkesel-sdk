@@ -13,7 +13,7 @@ use Illuminate\Support\Arr;
 
 trait ArkeselEndpoints
 {
-    private array $endpoints = [
+    private static array $endpoints = [
         'send_sms' => [
             'v1' => '/sms/api?action=send-sms',
             'v2' => '/api/v2/sms/send',
@@ -44,10 +44,10 @@ trait ArkeselEndpoints
      * @param  string|null  $apiVersion
      * @return string
      */
-    public function getEndpoint(string $baseServer, string $resource, ?string $apiVersion)
+    public static function getEndpoint(string $baseServer, string $resource, ?string $apiVersion)
     {
         /** @var null|string|array */
-        $resourceEndpoint = Arr::get($this->endpoints, $resource);
+        $resourceEndpoint = Arr::get(self::$endpoints, $resource);
 
         throw_if(empty($resourceEndpoint), new Exception('No endpoints specified for the resource: '.$resource));
 

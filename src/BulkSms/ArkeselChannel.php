@@ -14,12 +14,6 @@ use Parables\ArkeselSdk\Exceptions\ArkeselNotificationChannelException;
 
 class ArkeselChannel
 {
-    protected ArkeselSms $arkeselSms;
-
-    public function __construct(ArkeselSms $arkeselSms)
-    {
-        $this->arkeselSms = $arkeselSms;
-    }
 
     /**
      * Send the given notification.
@@ -28,40 +22,35 @@ class ArkeselChannel
      * @param  \Illuminate\Notifications\Notification  $notification
      * @return array
      *
-     * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsBuilderException
+     * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsException
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselSmsResponseOrException
      * @throws \Parables\ArkeselSdk\Exceptions\ArkeselNotificationChannelException
      */
     public function send($notifiable, Notification $notification): array
     {
-        throw_if(
-            ! method_exists($notification, 'toArkesel'),
-            ArkeselNotificationChannelException::methodDoesNotExist(notification: $notification),
-        );
+        if (method_exists($notification, 'toArkesel')) {
 
-        // get the message from the Notification class
-        $builder = $notification->toArkesel($notifiable);
+            $toArkesel = $notification->toArkesel($notifiable);
 
-        // compose the sms using the fluent setter methods
-        if (is_string($builder)) {
-            // set the message only. the other fields will fallback to the defaults
-            $this->arkeselSms->message(message: $builder);
-        } elseif ($builder instanceof ArkeselMessageBuilder) {
-            // create a new instance with the builder
-            $this->arkeselSms = new ArkeselSms(builder: $builder);
-        } else {
-            throw ArkeselNotificationChannelException::invalidReturnType($notification);
+            /** @var ArkeselMessageBuilder $builder */
+            $builder = match (true) {
+                is_a($toArkesel, ArkeselMessageBuilder::class) => $toArkesel,
+                is_string($toArkesel) => (new ArkeselMessageBuilder)->message(message: $toArkesel),
+            };
+
+            if (empty($builder->getRecipients(shouldThrow: false))) {
+                $builder = $builder->recipients(
+                    $this->getRecipients(
+                        notifiable: $notifiable,
+                        notification: $notification
+                    )
+                );
+            }
+            // send the sms notification
+            return (new ArkeselSms(builder: $builder))->send();
         }
 
-        // if no recipients, get the recipients using a chain of fallbacks
-        if (empty($this->arkeselSms->getRecipients())) {
-            $this->arkeselSms->recipients(
-                $this->getRecipients(notifiable: $notifiable, notification: $notification)
-            );
-        }
-
-        // send the sms notification
-        return $this->arkeselSms->send();
+        throw ArkeselNotificationChannelException::methodDoesNotExist(notification: $notification);
     }
 
     /**
