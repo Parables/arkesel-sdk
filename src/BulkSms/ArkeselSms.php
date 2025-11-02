@@ -21,8 +21,7 @@ class ArkeselSms
 
     public function __construct(
         private ArkeselMessageBuilder $builder
-    ) {
-    }
+    ) {}
 
     /**
      * proxy to the __constructor to be used as a Facade.
@@ -85,7 +84,7 @@ class ArkeselSms
      *
      * @throws \Exception
      */
-    public static function getSmsBalance(string $smsApiVersion = null, string $smsApiKey = null): array
+    public static function getSmsBalance(?string $smsApiVersion = null, ?string $smsApiKey = null): array
     {
         $builder = new ArkeselMessageBuilder();
         $smsApiVersion ??= $builder->getSmsApiVersion();
